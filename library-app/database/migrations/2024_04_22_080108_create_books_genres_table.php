@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('genre_id');
             $table->timestamps();
 
-            $table->foreign('book_id')->references('id')->on('books');
-            $table->foreign('genre_id')->references('id')->on('genres');
+            // $table->foreign('book_id')->references('id')->on('books');
+            // $table->foreign('genre_id')->references('id')->on('genres');
         });
     }
 

@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('location');
             $table->timestamps();
 
-            $table->foreign('book_id')->references('id')->on('books');
-            $table->foreign('publisher_id')->references('id')->on('publishers');
+            // $table->foreign('book_id')->references('id')->on('books');
+            // $table->foreign('publisher_id')->references('id')->on('publishers');
         });
     }
 

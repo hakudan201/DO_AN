@@ -26,7 +26,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('library_id')->references('id')->on('libraries');
+            // $table->foreign('library_id')->references('id')->on('libraries');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -23,8 +23,8 @@ return new class extends Migration
             $table->integer('fee')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('book_copy_id')->references('id')->on('books');
+            // $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('book_copy_id')->references('id')->on('books');
         });
     }
 

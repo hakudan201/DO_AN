@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('author_id');
             $table->timestamps();
 
-            $table->foreign('book_id')->references('id')->on('books');
-            $table->foreign('author_id')->references('id')->on('authors');
+            // $table->foreign('book_id')->references('id')->on('books');
+            // $table->foreign('author_id')->references('id')->on('authors');
         });
     }
 
