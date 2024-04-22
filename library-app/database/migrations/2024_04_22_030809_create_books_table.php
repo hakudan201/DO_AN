@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->integer('numOfPages');
-            $table->string('ISBN');
+            $table->string('ISBN')->unique();
             $table->string('description');
             $table->timestamps();
         });
