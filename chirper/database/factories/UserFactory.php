@@ -27,8 +27,14 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => static::$password ??= Hash::make('12345678'),
             'remember_token' => Str::random(10),
+            'DOB' => $this->faker->date('Y-m-d'), // Generate a random date of birth
+            'address' => $this->faker->address(), // Generate a fake address
+            'phone' => $this->faker->phoneNumber(), // Generate a fake phone number
+            'role' => $this->faker->randomElement(['user', 'librarian']), // Random role
+            'library_id' => $this->faker->numberBetween(1, 10), // Random library ID
+            'due_membership' => $this->faker->date('Y-m-d', '+1 year') // Membership due date
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Library;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $libraries = Library::factory(5)->create();
+        User::factory()->count(40)->create([
+            'library_id' => function () use ($libraries) {
+                return $libraries->random(); // Assign a random library to each user
+            },
         ]);
     }
 }
