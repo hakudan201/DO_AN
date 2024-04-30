@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ChirpController;
+use App\Http\Controllers\BookcopyController;
+use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -31,6 +33,14 @@ Route::resource('chirps', ChirpController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('users', UserController::class)
+    ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('bookcopies', BookcopyController::class)
+    ->only(['index', 'store', 'update', 'destroy'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('libraries', LibraryController::class)
     ->only(['index', 'store', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 

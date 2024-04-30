@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Book;
+use App\Models\Bookcopy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class UserController extends Controller
+class BookcopyController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,22 +19,19 @@ class UserController extends Controller
     {
         $curr_user = auth()->user();
         if ($curr_user->role == 'librarian') {
-            $users = User::where('library_id', $curr_user->library_id)
-                ->where('id', '!=', $curr_user->id) // Exclude current user's ID
-                ->latest()
-                ->get();
-            return Inertia::render('Users/Index', [
-                'users' => $users,
-            ]);
-        } else if($curr_user->role == 'admin') {
-            $users = User::where('role', 'librarian')
-                ->latest()
-                ->get();
-            return Inertia::render('Users/Index', [
-                'users' => $users,
+            $bookcopies = BookCopy::where('library_id', $curr_user->library_id)
+                    ->latest()
+                    ->with('book')->get();
+            // $book = Book::where
+            return Inertia::render('Bookcopies/Index', [
+                'bookcopies' => $bookcopies,
+                // 'books' => $books
             ]);
         }
-        // return $curr_user->role == 'user';
+        // $bookcopies = BookCopy::where('library_id', $curr_user->library_id)
+        //             ->latest()
+        //             ->with('book')->get();
+        // return $bookcopies[1];
     }
 
     /**
@@ -61,7 +59,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Bookcopy $user)
     {
         //
     }
@@ -69,7 +67,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(Bookcopy $user)
     {
         //
     }

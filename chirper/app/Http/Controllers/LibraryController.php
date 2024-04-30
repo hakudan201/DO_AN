@@ -2,38 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Library;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class UserController extends Controller
+class LibraryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $curr_user = auth()->user();
-        if ($curr_user->role == 'librarian') {
-            $users = User::where('library_id', $curr_user->library_id)
-                ->where('id', '!=', $curr_user->id) // Exclude current user's ID
-                ->latest()
-                ->get();
-            return Inertia::render('Users/Index', [
-                'users' => $users,
+        // $curr_user = auth()->user();
+            $libraries = Library::all();
+            return Inertia::render('Libraries/Index', [
+                'libraries' => $libraries,
             ]);
-        } else if($curr_user->role == 'admin') {
-            $users = User::where('role', 'librarian')
-                ->latest()
-                ->get();
-            return Inertia::render('Users/Index', [
-                'users' => $users,
-            ]);
-        }
-        // return $curr_user->role == 'user';
+        // return $libraries;
     }
 
     /**
@@ -61,7 +49,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Library $user)
     {
         //
     }
@@ -69,7 +57,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(Library $user)
     {
         //
     }
