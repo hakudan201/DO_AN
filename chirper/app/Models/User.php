@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'DOB',
+        'address',
+        'phone',
+        'role',
+        'due_membership',
+        'library_id'
     ];
 
     /**

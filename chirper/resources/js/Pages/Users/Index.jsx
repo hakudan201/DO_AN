@@ -3,18 +3,14 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import User from '@/Components/User';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
-import { useForm, Head } from '@inertiajs/react';
-import { Table } from "antd";
+import { Link, useForm, Head } from '@inertiajs/react';
+import { Table, Button } from "antd";
+// import { route } from '@inertiajs/inertia-react';
 
 export default function Index({ auth, users }) {
     const { data, setData, post, processing, reset, errors } = useForm({
         message: '',
     });
-
-    // const submit = (e) => {
-    //     e.preventDefault();
-    //     post(route('users.store'), { onSuccess: () => reset() });
-    // };
 
     const dataSource = users.map(user => ({
         key: user.id.toString(),
@@ -60,10 +56,20 @@ export default function Index({ auth, users }) {
         {
             title: 'Action',
             key: 'operation',
+            // dataIndex: 'key',
             fixed: 'right',
             width: 100,
-            render: () => <a>action</a>,
-          }
+            // render: (user) => (
+            //     <a href={route('user.show', { id: user.id })}>Update</a> // Corrected here
+            // )
+            render: (user) => (
+                <Link
+                    href={route('users.show', { id: user.key })}
+                >
+                    <Button type="primary">Update</Button>
+                </Link>
+            )
+        }
       ];
 
     return (
@@ -77,7 +83,7 @@ export default function Index({ auth, users }) {
                     x: 1300,
                   }}
             />;
-           
+
         </AuthenticatedLayout>
     );
 }

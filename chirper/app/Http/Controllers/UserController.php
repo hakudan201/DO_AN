@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -61,9 +62,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show($user_id)
     {
-        //
+        $user = User::find($user_id);
+        return Inertia::render('Users/Edit', [
+            'user' => $user
+        ]);
     }
 
     /**
@@ -77,18 +81,25 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, User $user): RedirectResponse
-    // {
-    //     Gate::authorize('update', $user);
-
-    //     $validated = $request->validate([
-    //         'message' => 'required|string|max:255',
-    //     ]);
-
-    //     $chirp->update($validated);
-
-    //     return redirect(route('chirps.index'));
-    // }
+    public function update(Request $request, User $user): RedirectResponse
+    {
+        // Gate::authorize('update', $user);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore($user->id), // Ensure email is unique except for the current user
+            ],
+            'DOB' => 'required|date',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|string|max:10',
+            'due_membership' => 'required|after_or_equal:today'
+        ]);
+        $user->update($validated);
+        return redirect()->route('users.show', ['user' => $user->id]);
+    }
 
     /**
      * Remove the specified resource from storage.

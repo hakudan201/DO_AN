@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('author');
             $table->integer('numOfPages');
             $table->string('ISBN')->unique();
             $table->string('description');
+            $table->integer('library_id');
+            $table->string('publisher');
+            $table->integer('year_published');
+            $table->string('language');
+            $table->string('format');
+            $table->integer('price');
+            $table->enum('status', ['Available', 'Reserved', 'Borrowed', 'Lost', 'Maintenance']);
+            $table->string('location');
             $table->timestamps();
         });
     }

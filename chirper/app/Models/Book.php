@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class Book extends Model
@@ -15,11 +14,15 @@ class Book extends Model
         'title',
         'numOfPages',
         'ISBN',
-        'description'
+        'description',
+        'author',
+        'publisher',
+        'library_id',
+        'year_published',
+        'language',
+        'format',
+        'price',
+        'status',
+        'location'
     ];
-
-    public function bookcopies(): HasMany
-    {
-        return $this->hasMany(Bookcopy::class);
-    }
 }

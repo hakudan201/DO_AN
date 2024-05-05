@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'DOB' => $this->faker->date('Y-m-d'), // Generate a random date of birth
             'address' => $this->faker->address(), // Generate a fake address
-            'phone' => $this->faker->phoneNumber(), // Generate a fake phone number
+            'phone' => '0' . $this->faker->numerify('#########'),
             'role' => $this->faker->randomElement(['user', 'librarian']), // Random role
             'library_id' => $this->faker->numberBetween(1, 10), // Random library ID
             'due_membership' => $this->faker->date('Y-m-d', '+1 year') // Membership due date

@@ -33,8 +33,9 @@ Route::resource('chirps', ChirpController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('users', UserController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
+// Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
 
 Route::resource('bookcopies', BookcopyController::class)
     ->only(['index', 'store', 'update', 'destroy'])

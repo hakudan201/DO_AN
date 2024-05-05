@@ -9,18 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('bookcopies', function (Blueprint $table) {
-            $table->foreignId('publisher_id')->constrained()->cascadeOnDelete();
-        });
-    }
+    // public function up(): void
+    // {
+    //     Schema::table('bookcopies', function (Blueprint $table) {
+    //         $table->foreignId('publisher_id')->constrained()->cascadeOnDelete();
+    //     });
+    // }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('bookcopies_publishers');
-    }
+    // /**
+    //  * Reverse the migrations.
+    //  */
+    // public function down(): void
+    // {
+    //     Schema::dropIfExists('bookcopies_publishers');
+    // }
 };
