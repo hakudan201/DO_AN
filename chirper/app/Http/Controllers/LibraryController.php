@@ -65,18 +65,19 @@ class LibraryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, User $user): RedirectResponse
-    // {
-    //     Gate::authorize('update', $user);
+    public function update(Request $request, Library $library)
+    {
 
-    //     $validated = $request->validate([
-    //         'message' => 'required|string|max:255',
-    //     ]);
-
-    //     $chirp->update($validated);
-
-    //     return redirect(route('chirps.index'));
-    // }
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+        ]);
+        $library->update($validatedData);
+        return response()->json(['message' => 'Library updated successfully', 'library' => $library]);
+        // return redirect(route('chirps.index'));
+    }
 
     /**
      * Remove the specified resource from storage.

@@ -42,7 +42,7 @@ Route::resource('bookcopies', BookcopyController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('libraries', LibraryController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
 require __DIR__.'/auth.php';

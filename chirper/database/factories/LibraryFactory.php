@@ -23,6 +23,7 @@ class LibraryFactory extends Factory
         return [
             'name' => $this->faker->company,
             'address' => $this->faker->address,
+            'email' => $this->faker->email(),
             'phone' => $this->faker->phoneNumber,
         ];
     }
