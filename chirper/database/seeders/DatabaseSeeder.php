@@ -7,6 +7,7 @@ use App\Models\Genre;
 use App\Models\GenresBook;
 use App\Models\User;
 use App\Models\Library;
+use App\Models\Request;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,6 +29,8 @@ class DatabaseSeeder extends Seeder
         Genre::factory()->count(50)->create();
         // AuthorsBook::factory()->count(20)->create();
         GenresBook::factory()->count(70)->create();
+        Request::factory()->count(70)->create();
+
         // $publishers = Publisher::factory()->count(10)->create();
         // Bookcopy::factory()->count(30)->create([
         //     'library_id' => function () use ($libraries) {
