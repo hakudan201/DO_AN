@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Models\Bookcopy;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class BookcopyController extends Controller
+class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,12 +18,11 @@ class BookcopyController extends Controller
     {
         $curr_user = auth()->user();
         if ($curr_user->role == 'librarian') {
-            $bookcopies = BookCopy::where('library_id', $curr_user->library_id)
-                    ->latest()
-                    ->with('book')->get();
+            $books = Book::where('library_id', $curr_user->library_id)
+                    ->latest()->get();
             // $book = Book::where
-            return Inertia::render('Bookcopies/Index', [
-                'bookcopies' => $bookcopies,
+            return Inertia::render('Books/Index', [
+                'books' => $books,
                 // 'books' => $books
             ]);
         }
@@ -59,18 +57,21 @@ class BookcopyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Bookcopy $user)
+    public function show($book_id)
     {
-        //
+        $book = Book::find($book_id);
+        return Inertia::render('Books/Edit', [
+            'book' => $book
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Bookcopy $user)
-    {
-        //
-    }
+    // public function edit(Book $user)
+    // {
+    //     //
+    // }
 
     /**
      * Update the specified resource in storage.

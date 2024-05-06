@@ -33,7 +33,7 @@ export default function Authenticated({ user, header, children }) {
                                     </NavLink>
                                 )}
                                 {(user.role === 'librarian') && (
-                                    <NavLink href={route('bookcopies.index')} active={route().current('bookcopies.index')}>
+                                    <NavLink href={route('books.index')} active={route().current('books.index')}>
                                         Sách
                                     </NavLink>
                                 )}

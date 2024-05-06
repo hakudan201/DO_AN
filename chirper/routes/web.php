@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\V1\BookController as V1BookController;
 use App\Http\Controllers\ChirpController;
-use App\Http\Controllers\BookcopyController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -35,10 +36,9 @@ Route::resource('chirps', ChirpController::class)
 Route::resource('users', UserController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
-// Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
 
-Route::resource('bookcopies', BookcopyController::class)
-    ->only(['index', 'store', 'update', 'destroy'])
+Route::resource('books', BookController::class)
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
 Route::resource('libraries', LibraryController::class)
