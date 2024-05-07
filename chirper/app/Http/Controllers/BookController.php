@@ -73,18 +73,17 @@ class BookController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, User $user): RedirectResponse
-    // {
-    //     Gate::authorize('update', $user);
-
-    //     $validated = $request->validate([
-    //         'message' => 'required|string|max:255',
-    //     ]);
-
-    //     $chirp->update($validated);
-
-    //     return redirect(route('chirps.index'));
-    // }
+    public function update(Request $request, Book $book)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'description' => 'required|string|max:25555',
+        ]);
+        $book->update($validatedData);
+        return response()->json(['message' => 'Library updated successfully', 'book' => $book]);
+    }
 
     /**
      * Remove the specified resource from storage.

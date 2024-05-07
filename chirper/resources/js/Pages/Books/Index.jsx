@@ -8,16 +8,13 @@ import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
 import axios from 'axios';
 
 export default function Index({ auth, books }) {
-    // const { data, setData, post, processing, reset, errors } = useForm({
-    //     message: "",
-    // });
 
     const originData = books.map((book) => ({
         key: book.id.toString(),
-        book_title: book.title,
+        title: book.title,
         author: book.author,
         publisher: book.publisher,
-        description: book.description
+        description: book.description,
     }));
 
     const EditableCell = ({
@@ -35,7 +32,7 @@ export default function Index({ auth, books }) {
           <td {...restProps}>
             {editing ? (
               <Form.Item
-                title={dataIndex}
+                name={dataIndex}
                 style={{
                   margin: 0,
                 }}
@@ -60,8 +57,8 @@ export default function Index({ auth, books }) {
       const isEditing = (record) => record.key === editingKey;
       const edit = (record) => {
         form.setFieldsValue({
-          book_title: '',
-          age: '',
+          title: '',
+          author: '',
           publisher: '',
           description: '',
           ...record,
@@ -85,7 +82,7 @@ export default function Index({ auth, books }) {
             setData(newData);
             setEditingKey('');
             const updatedItem = {
-              book_title: row.book_title,
+              title: row.title,
               author: row.author,
               publisher: row.publisher,
               description: row.description,
@@ -103,7 +100,7 @@ export default function Index({ auth, books }) {
       const columns = [
         {
           title: 'Ten thu vien',
-          dataIndex: 'book_title',
+          dataIndex: 'title',
           width: '25%',
           editable: true,
         },
@@ -160,7 +157,7 @@ export default function Index({ auth, books }) {
           ...col,
           onCell: (record) => ({
             record,
-            inputType: col.dataIndex === 'age' ? 'number' : 'text',
+            // inputType: col.dataIndex === 'age' ? 'number' : 'text',
             dataIndex: col.dataIndex,
             title: col.title,
             editing: isEditing(record),
