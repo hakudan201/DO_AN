@@ -25,7 +25,6 @@ class BookcopyFactory extends Factory
         return [
             'book_id' => $this->faker->numberBetween(1, 50), // Example: assuming there are 50 books
             'ISBN' => $this->faker->unique()->isbn10, // Generate a unique ISBN-10
-            'publisher' => $this->faker->company,
             'numOfPages' => $this->faker->numberBetween(100, 500), // Random number of pages between 100 and 500
             'library_id' => $this->faker->numberBetween(1, 2), // Example: assuming there are 5 libraries
             'year_published' => $this->faker->numberBetween(1950, 2022),

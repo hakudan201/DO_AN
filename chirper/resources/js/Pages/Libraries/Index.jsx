@@ -1,4 +1,3 @@
-
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import User from "@/Components/User";
 import InputError from "@/Components/InputError";
@@ -9,9 +8,6 @@ import { Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd';
 import axios from 'axios';
 
 export default function Index({ auth, libraries }) {
-    // const { data, setData, post, processing, reset, errors } = useForm({
-    //     message: '',
-    // });
 
     const originData = libraries.map(library => ({
         key: library.id.toString(),
@@ -21,44 +17,6 @@ export default function Index({ auth, libraries }) {
         phone: library.phone,
     }));
 
-    // const columns = [
-    //     {
-    //       title: 'Ten thu vien',
-    //       dataIndex: 'name',
-    //       key: 'name',
-    //     },
-    //     {
-    //       title: 'Email',
-    //       dataIndex: 'email',
-    //       key: 'email',
-    //     },
-    //     {
-    //         title: 'Dia chi',
-    //         dataIndex: 'address',
-    //         key: 'address',
-    //     },
-    //     {
-    //         title: 'So dien thoai',
-    //         dataIndex: 'phone',
-    //         key: 'phone',
-    //     },
-    //     {
-    //         title: 'Action',
-    //         key: 'operation',
-    //         fixed: 'right',
-    //         width: 100,
-    //         render: () => <a>action</a>,
-    //       }
-    //   ];
-    // const originData = [];
-    // for (let i = 0; i < 100; i++) {
-    //   originData.push({
-    //     key: i.toString(),
-    //     name: `Edward ${i}`,
-    //     age: 32,
-    //     address: `London Park no. ${i}`,
-    //   });
-    // }
     const EditableCell = ({
       editing,
       dataIndex,
@@ -100,7 +58,8 @@ export default function Index({ auth, libraries }) {
     const edit = (record) => {
       form.setFieldsValue({
         name: '',
-        age: '',
+        // age: '',
+        phone: '',
         address: '',
         email: '',
         ...record,
@@ -199,7 +158,7 @@ export default function Index({ auth, libraries }) {
         ...col,
         onCell: (record) => ({
           record,
-          inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        //   inputType: col.dataIndex === 'age' ? 'number' : 'text',
           dataIndex: col.dataIndex,
           title: col.title,
           editing: isEditing(record),

@@ -15,7 +15,7 @@ class Book extends Model
         'title',
         'author',
         'description',
-        'language'
+        'publisher'
     ];
 
     public function bookcopies(): HasMany

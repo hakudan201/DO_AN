@@ -14,7 +14,6 @@ class Bookcopy extends Model
         'book_id',
         'ISBN',
         'numberOfPages',
-        'publisher',
         'library_id',
         'year_published',
         'format',

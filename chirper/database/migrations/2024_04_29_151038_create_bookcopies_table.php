@@ -16,7 +16,6 @@ return new class extends Migration
             $table->foreignId('book_id')->constrained()->cascadeOnDelete();
             $table->string('ISBN')->unique();
             $table->integer('numOfPages');
-            $table->string('publisher');
             $table->integer('year_published');
             $table->string('format');
             $table->enum('status', ['Available', 'Reserved', 'Borrowed', 'Lost', 'Maintenance']);

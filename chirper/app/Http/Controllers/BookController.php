@@ -18,12 +18,9 @@ class BookController extends Controller
     {
         $curr_user = auth()->user();
         if ($curr_user->role == 'librarian') {
-            $books = Book::where('library_id', $curr_user->library_id)
-                    ->latest()->get();
-            // $book = Book::where
+            $books = Book::all();
             return Inertia::render('Books/Index', [
                 'books' => $books,
-                // 'books' => $books
             ]);
         }
         // $bookcopies = BookCopy::where('library_id', $curr_user->library_id)

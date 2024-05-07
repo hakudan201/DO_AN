@@ -21,12 +21,12 @@ class BookFactory extends Factory
      */
     public function definition(): array
     {
-        $statusOptions = ['Available', 'Reserved', 'Borrowed', 'Lost', 'Maintenance'];
         return [
             'title' => $this->faker->sentence(4), // Generate a random title (4 words)
             'author' => $this->faker->name(),
             'description' => Str::limit($this->faker->paragraph(3), 200), // Generate a random description (3 paragraphs)
-            'language' => $this->faker->languageCode,
+            'publisher' => $this->faker->company,
+
         ];
     }
 
