@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Book;
+use App\Models\BookCopy;
 use App\Models\Genre;
 use App\Models\GenresBook;
 use App\Models\User;
@@ -24,24 +25,22 @@ class DatabaseSeeder extends Seeder
                 return $libraries->random(); // Assign a random library to each user
             },
         ]);
-        Book::factory()->count(50)->create();
+        $books = Book::factory()->count(30)->create();
         // Author::factory()->count(20)->create();
         Genre::factory()->count(50)->create();
         // AuthorsBook::factory()->count(20)->create();
         GenresBook::factory()->count(70)->create();
+        Bookcopy::factory()->count(100)->create([
+            'library_id' => function () use ($libraries) {
+                return $libraries->random(); // Assign a random library to each user
+            },
+            'book_id' => function () use ($books) {
+                return $books->random();
+            }
+        ]);
         Request::factory()->count(70)->create();
 
         // $publishers = Publisher::factory()->count(10)->create();
-        // Bookcopy::factory()->count(30)->create([
-        //     'library_id' => function () use ($libraries) {
-        //         return $libraries->random(); // Assign a random library to each user
-        //     },
-        //     'publisher_id' => function () use ($publishers) {
-        //         return $publishers->random(); // Assign a random library to each user
-        //     },
-        //     'book_id' => function () use ($books) {
-        //         return $books->random();
-        //     }
-        // ]);
+
     }
 }

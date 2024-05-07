@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('book_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('bookcopy_id')->constrained()->cascadeOnDelete();
             $table->date('borrow_date'); // Sửa borrow_date thành kiểu dữ liệu date
             $table->date('checkout_date')->nullable(); // Sửa checkout_date thành kiểu dữ liệu date
             $table->date('due_date')->nullable(); // Sửa due_date thành kiểu dữ liệu date

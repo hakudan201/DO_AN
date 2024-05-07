@@ -2,7 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Book;
+// use App\Models\Book;
+use App\Models\Bookcopy;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,7 +20,7 @@ class RequestFactory extends Factory
     public function definition(): array
     {
         $userId = User::where('role', 1)->inRandomOrder()->first()->id; // Sửa điều kiện lấy UserID
-        $bookId = Book::inRandomOrder()->first()->id;
+        $bookcopyId = Bookcopy::inRandomOrder()->first()->id;
 
         // Tính toán ngày mượn, ngày trả và trạng thái dựa trên ngày mượn và trả
         $borrow_date = $this->faker->dateTimeBetween('-10 years', 'now')->format('Y-m-d');
@@ -29,7 +30,7 @@ class RequestFactory extends Factory
 
         return [
             'user_id' => $userId,
-            'book_id' => $bookId,
+            'bookcopy_id' => $bookcopyId,
             'borrow_date' => $borrow_date,
             'checkout_date' => $checkout_date,
             'due_date' => $checkout_date ? date('Y-m-d', strtotime($checkout_date . ' + 7 days')) : null,
