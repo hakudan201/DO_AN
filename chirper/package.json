@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "antd": "^5.16.5",
-        "dayjs": "^1.11.10"
+        "dayjs": "^1.11.10",
+        "react-highlight-words": "^0.20.0"
     }
 }

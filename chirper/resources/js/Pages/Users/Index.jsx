@@ -1,18 +1,22 @@
-import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import User from '@/Components/User';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import { Link, useForm, Head } from '@inertiajs/react';
-import { Table, Button } from "antd";
+import React, { useRef, useState } from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Link, useForm, Head } from "@inertiajs/react";
+import { Input, Table, Space, Button } from "antd";
+import Highlighter from "react-highlight-words";
+import { SearchOutlined } from "@ant-design/icons";
+
 // import { route } from '@inertiajs/inertia-react';
 
-export default function Index({ auth, users }) {
+export default function Index({ auth, users, lib_name }) {
     const { data, setData, post, processing, reset, errors } = useForm({
-        message: '',
+        message: "",
     });
 
-    const dataSource = users.map(user => ({
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const [searchText, setSearchText] = useState("");
+    const searchInput = useRef(null);
+
+    const dataSource = users.map((user) => ({
         key: user.id.toString(),
         name: user.name,
         email: user.email,
@@ -22,68 +26,180 @@ export default function Index({ auth, users }) {
         due_membership: user.due_membership,
     }));
 
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+    const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText("");
+    };
+
+    const getColumnSearchProps = (dataIndex) => ({
+        filterDropdown: ({
+            setSelectedKeys,
+            selectedKeys,
+            confirm,
+            clearFilters,
+            close,
+        }) => (
+            <div
+                style={{
+                    padding: 8,
+                }}
+                onKeyDown={(e) => e.stopPropagation()}
+            >
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) =>
+                        setSelectedKeys(e.target.value ? [e.target.value] : [])
+                    }
+                    onPressEnter={() =>
+                        handleSearch(selectedKeys, confirm, dataIndex)
+                    }
+                    style={{
+                        marginBottom: 8,
+                        display: "block",
+                    }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() =>
+                            handleSearch(selectedKeys, confirm, dataIndex)
+                        }
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() =>
+                            clearFilters && handleReset(clearFilters)
+                        }
+                        size="small"
+                        style={{
+                            width: 90,
+                        }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered) => (
+            <SearchOutlined
+                style={{
+                    color: filtered ? "#1677ff" : undefined,
+                }}
+            />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{
+                        backgroundColor: "#ffc069",
+                        padding: 0,
+                    }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ""}
+                />
+            ) : (
+                text
+            ),
+    });
+
     const columns = [
         {
-          title: 'Ho va ten',
-          dataIndex: 'name',
-          key: 'name',
+            title: "Họ và tên",
+            dataIndex: "name",
+            key: "name",
+            ...getColumnSearchProps("name"),
         },
         {
-          title: 'Email',
-          dataIndex: 'email',
-          key: 'email',
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+            ...getColumnSearchProps("email"),
         },
         {
-          title: 'Ngay sinh',
-          dataIndex: 'DOB',
-          key: 'DOB',
+            title: "Ngày sinh",
+            dataIndex: "DOB",
+            key: "DOB",
         },
         {
-            title: 'Dia chi',
-            dataIndex: 'address',
-            key: 'address',
+            title: "Địa chỉ",
+            dataIndex: "address",
+            key: "address",
+            ...getColumnSearchProps("address"),
         },
         {
-            title: 'So dien thoai',
-            dataIndex: 'phone',
-            key: 'phone',
+            title: "Số điện thoại",
+            dataIndex: "phone",
+            key: "phone",
+            ...getColumnSearchProps("phone"),
         },
         {
-            title: 'Ngay het han',
-            dataIndex: 'due_membership',
-            key: 'due_membership',
+            title: "Ngày hết hạn",
+            dataIndex: "due_membership",
+            key: "due_membership",
         },
         {
-            title: 'Action',
-            key: 'operation',
+            title: "Hành động",
+            key: "operation",
             // dataIndex: 'key',
-            fixed: 'right',
+            fixed: "right",
             width: 100,
             // render: (user) => (
             //     <a href={route('user.show', { id: user.id })}>Update</a> // Corrected here
             // )
             render: (user) => (
-                <Link
-                    href={route('users.show', { id: user.key })}
-                >
+                <Link href={route("users.show", { id: user.key })}>
                     <Button type="primary">Update</Button>
                 </Link>
-            )
-        }
-      ];
+            ),
+        },
+    ];
 
     return (
         <AuthenticatedLayout user={auth.user}>
+            
             <Head title="Users" />
             <Table
                 dataSource={dataSource}
                 columns={columns}
-                title={() => 'Ten cua thu vien'}
+                title={() => lib_name}
                 scroll={{
                     x: 1300,
-                  }}
-            />;
-
+                }}
+            />
+            ;
         </AuthenticatedLayout>
     );
 }

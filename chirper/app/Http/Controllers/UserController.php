@@ -19,14 +19,22 @@ class UserController extends Controller
     {
         $curr_user = auth()->user();
         if ($curr_user->role == 'librarian') {
-            $users = User::where('library_id', $curr_user->library_id)
-                ->where('id', '!=', $curr_user->id) // Exclude current user's ID
+            $users = User::where('id', '!=', $curr_user->id)
+                ->where('library_id', $curr_user->library_id)
+                ->where('role', 'user')
                 ->latest()
                 ->get();
+            $lib_name = User::with('library')
+                ->where('library_id', $curr_user->library_id)
+                ->where('id', $curr_user->id)
+                ->latest()
+                ->first();
+
             return Inertia::render('Users/Index', [
                 'users' => $users,
+                'lib_name' => $lib_name->library->name
             ]);
-        } else if($curr_user->role == 'admin') {
+        } else if ($curr_user->role == 'admin') {
             $users = User::where('role', 'librarian')
                 ->latest()
                 ->get();
