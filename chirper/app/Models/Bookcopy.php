@@ -13,7 +13,7 @@ class Bookcopy extends Model
     protected $fillable = [
         'book_id',
         'ISBN',
-        'numberOfPages',
+        'numOfPages',
         'library_id',
         'year_published',
         'format',

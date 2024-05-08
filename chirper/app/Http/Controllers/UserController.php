@@ -26,8 +26,6 @@ class UserController extends Controller
                 ->get();
             $lib_name = User::with('library')
                 ->where('library_id', $curr_user->library_id)
-                ->where('id', $curr_user->id)
-                ->latest()
                 ->first();
 
             return Inertia::render('Users/Index', [

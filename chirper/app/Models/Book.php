@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
@@ -18,8 +19,13 @@ class Book extends Model
         'publisher'
     ];
 
-    public function bookcopies(): HasMany
+    public function bookcopies()
     {
-        return $this->hasMany(Bookcopy::class);
+        return $this->hasMany(BookCopy::class);
+    }
+
+    public function genres()
+    {
+        return $this->belongsToMany(Genre::class, 'genres_books');
     }
 }

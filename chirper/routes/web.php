@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\V1\BookController as V1BookController;
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookcopyController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -41,8 +41,12 @@ Route::resource('books', BookController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
+Route::resource('bookcopies', BookcopyController::class)
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
+    ->middleware(['auth', 'verified']);
+
 Route::resource('libraries', LibraryController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

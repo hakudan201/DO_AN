@@ -4,7 +4,7 @@ import { SearchOutlined } from '@ant-design/icons';
 
 import { Head } from "@inertiajs/react";
 import React, {useRef, useState } from 'react';
-import { Form, Input, InputNumber, Popconfirm, Table, Typography, Space, Button} from 'antd';
+import { Form, Input, InputNumber, Popconfirm, Table, Typography, Space, Button, Tag} from 'antd';
 import Highlighter from 'react-highlight-words';
 import axios from 'axios';
 
@@ -15,10 +15,11 @@ export default function Index({ auth, books }) {
 
     const originData = books.map((book) => ({
         key: book.id.toString(),
-        book_title: book.title,
+        title: book.title,
         author: book.author,
         publisher: book.publisher,
-        description: book.description
+        description: book.description,
+        genres: book.genres.map((genre) => genre.name)
     }));
     const [searchedColumn, setSearchedColumn] = useState('');
     const [searchText, setSearchText] = useState('');
@@ -90,7 +91,7 @@ export default function Index({ auth, books }) {
             setData(newData);
             setEditingKey('');
             const updatedItem = {
-              book_title: row.book_title,
+                title: row.title,
               author: row.author,
               publisher: row.publisher,
               description: row.description,
@@ -201,11 +202,28 @@ export default function Index({ auth, books }) {
 
       const columns = [
         {
+            title: "Thể loại",
+            dataIndex: "genres",
+            render: (_, { genres }) => (
+                <>
+                    {genres.map((genre, index) => {
+                        let color = 'geekblue';
+                        // Render the Tag component with dynamically assigned color and unique key
+                        return (
+                            <Tag color={color} key={`${genre}-${index}`}>
+                                {genre.toUpperCase()}
+                            </Tag>
+                        );
+                    })}
+                </>
+            ),
+        },
+        {
           title: 'Tên sách',
-          dataIndex: 'book_title',
+          dataIndex: 'title',
           width: '25%',
           editable: true,
-          ...getColumnSearchProps('book_title'),
+          ...getColumnSearchProps('title'),
 
         },
         {

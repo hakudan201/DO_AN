@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Library;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -18,15 +20,27 @@ class BookController extends Controller
     {
         $curr_user = auth()->user();
         if ($curr_user->role == 'librarian') {
-            $books = Book::all();
-            return Inertia::render('Books/Index', [
+            $books = Book::with('genres')->get();
+            return Inertia::render('Books/AdminIndex', [
                 'books' => $books,
             ]);
+        } else if ($curr_user->role == 'admin') {
+            $library_id = $curr_user->library_id;
+            $lib_name = Library::where('id', $library_id)->first()->name;
+            $books = Book::withCount(['bookcopies' => function ($query) use ($library_id) {
+                $query->where('library_id', $library_id);
+            }])
+                ->having('bookcopies_count', '>', 0) // Filter books with count > 0
+                ->with(['genres' => function ($query) {
+                    $query->select('name'); // Select only the 'name' column from the genres table
+                }])
+                ->get();
+            return Inertia::render('Books/LibIndex', [
+                'books' => $books,
+                'lib_name' => $lib_name
+            ]);
+            // return $books;
         }
-        // $bookcopies = BookCopy::where('library_id', $curr_user->library_id)
-        //             ->latest()
-        //             ->with('book')->get();
-        // return $bookcopies[1];
     }
 
     /**
@@ -54,12 +68,13 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($book_id)
+    public function show($book_id, $library_id)
     {
-        $book = Book::find($book_id);
-        return Inertia::render('Books/Edit', [
-            'book' => $book
-        ]);
+        // $book = Book::find($book_id);
+        // return Inertia::render('Books/Edit', [
+        //     'book' => $book
+        // ]);
+        return 'ok';
     }
 
     /**

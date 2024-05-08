@@ -32,14 +32,14 @@ export default function Authenticated({ user, header, children }) {
                                         Người dùng
                                     </NavLink>
                                 )}
-                                {(user.role === 'librarian') && (
+                                {(user.role === 'librarian' || user.role === 'admin') && (
                                     <NavLink href={route('books.index')} active={route().current('books.index')}>
                                         Sách
                                     </NavLink>
                                 )}
                                 {(user.role === 'librarian') && (
                                     <NavLink href={route('libraries.index')} active={route().current('libraries.index')}>
-                                        Thu vien
+                                        Thư viện
                                     </NavLink>
                                 )}
                             </div>

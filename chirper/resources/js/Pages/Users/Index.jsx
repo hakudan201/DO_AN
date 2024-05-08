@@ -141,6 +141,11 @@ export default function Index({ auth, users, lib_name }) {
             dataIndex: "name",
             key: "name",
             ...getColumnSearchProps("name"),
+            // render: (text, record) => (
+            //     <a href={route("bookcopies.show", { id: record.key })}>
+            //         {text}
+            //     </a>
+            // ),
         },
         {
             title: "Email",
@@ -189,7 +194,7 @@ export default function Index({ auth, users, lib_name }) {
 
     return (
         <AuthenticatedLayout user={auth.user}>
-            
+
             <Head title="Users" />
             <Table
                 dataSource={dataSource}
