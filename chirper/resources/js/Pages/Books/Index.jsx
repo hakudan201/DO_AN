@@ -40,7 +40,7 @@ export default function Index({ auth, books }) {
           <td {...restProps}>
             {editing ? (
               <Form.Item
-                title={dataIndex}
+                name={dataIndex}
                 style={{
                   margin: 0,
                 }}
@@ -197,7 +197,7 @@ export default function Index({ auth, books }) {
             text
           ),
       });
-    
+
 
       const columns = [
         {
