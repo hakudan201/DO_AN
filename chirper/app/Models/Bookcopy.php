@@ -27,4 +27,9 @@ class Bookcopy extends Model
         return $this->belongsTo(Book::class);
     }
 
+    public function library()
+    {
+        return $this->belongsTo(Library::class);
+    }
+
 }

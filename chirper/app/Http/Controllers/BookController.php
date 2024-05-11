@@ -19,12 +19,12 @@ class BookController extends Controller
     public function index()
     {
         $curr_user = auth()->user();
-        if ($curr_user->role == 'librarian') {
+        if ($curr_user->role == 'admin') {
             $books = Book::with('genres')->get();
             return Inertia::render('Books/AdminIndex', [
                 'books' => $books,
             ]);
-        } else if ($curr_user->role == 'admin') {
+        } else if ($curr_user->role == 'librarian') {
             $library_id = $curr_user->library_id;
             $lib_name = Library::where('id', $library_id)->first()->name;
             $books = Book::withCount(['bookcopies' => function ($query) use ($library_id) {

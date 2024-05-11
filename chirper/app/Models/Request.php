@@ -26,11 +26,11 @@ class Request extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class); // Mối quan hệ belongsTo với mô hình User
+        return $this->belongsTo(User::class, 'user_id'); // Mối quan hệ belongsTo với mô hình User
     }
 
-    public function book()
+    public function bookcopy()
     {
-        return $this->belongsTo(Book::class); // Mối quan hệ belongsTo với mô hình Book
+        return $this->belongsTo(Bookcopy::class, 'bookcopy_id'); // Mối quan hệ belongsTo với mô hình Book
     }
 }

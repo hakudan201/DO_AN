@@ -6,6 +6,7 @@ use App\Http\Controllers\BookcopyController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RequestController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -46,6 +47,10 @@ Route::resource('bookcopies', BookcopyController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('libraries', LibraryController::class)
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
+    ->middleware(['auth', 'verified']);
+
+Route::resource('requests', RequestController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 

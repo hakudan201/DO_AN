@@ -37,9 +37,14 @@ export default function Authenticated({ user, header, children }) {
                                         Sách
                                     </NavLink>
                                 )}
-                                {(user.role === 'librarian') && (
+                                {(user.role === 'admin') && (
                                     <NavLink href={route('libraries.index')} active={route().current('libraries.index')}>
                                         Thư viện
+                                    </NavLink>
+                                )}
+                                {(user.role === 'librarian') && (
+                                    <NavLink href={route('requests.index')} active={route().current('requests.index')}>
+                                        Yêu cầu
                                     </NavLink>
                                 )}
                             </div>

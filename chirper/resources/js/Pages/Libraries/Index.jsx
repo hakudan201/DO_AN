@@ -102,7 +102,7 @@ export default function Index({ auth, libraries }) {
       {
         title: 'Ten thu vien',
         dataIndex: 'name',
-        width: '25%',
+        width: '20%',
         editable: true,
       },
       {
@@ -114,13 +114,13 @@ export default function Index({ auth, libraries }) {
       {
         title: 'email',
         dataIndex: 'email',
-        width: '15%',
+        width: '20%',
         editable: true,
       },
       {
         title: 'address',
         dataIndex: 'address',
-        width: '40%',
+        width: '35%',
         editable: true,
       },
       {
