@@ -19,7 +19,7 @@ class RequestController extends Controller
         $library_id = auth()->user()->library_id;
         $requests = BookRequest::whereHas('bookCopy', function ($query) use ($library_id) {
             $query->where('library_id', $library_id);
-        })->with(['user:id,name,email,phone', ])->with('bookcopy.book:id,title,author')->get();
+        })->with(['user:id,name,email,phone',])->with('bookcopy.book:id,title,author')->get();
         return Inertia::render('Requests/Index', [
             'requests' => $requests,
         ]);
@@ -56,11 +56,27 @@ class RequestController extends Controller
         $book = $request->book;
         $bookcopy = $request->bookcopy;
         $user = $request->user;
+        $request = BookRequest::find($request->request_id);
         return Inertia::render('Requests/RequestInformation', [
             'book' => $book,
             'bookcopy' => $bookcopy,
-            'user' => $user
+            'user' => $user,
+            'request' => $request,
         ]);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id' => 'required|exists:requests,id', // Validate that 'id' exists in 'book_requests' table
+            'newStatus' => 'required|string', // Validate 'newStatus' as a required string
+        ]);
+
+        // Find the BookRequest instance by ID
+        $bookRequest = BookRequest::findOrFail($validatedData['id']);
+
+        // Update the 'status' field with the new status provided
+        $bookRequest->update(['status' => $validatedData['newStatus']]);
     }
 
     /**

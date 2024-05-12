@@ -128,7 +128,8 @@ export default function Index({ auth, requests }) {
                     data={{
                         book: request.book_data,
                         bookcopy: request.bookcopy_data,
-                        user: request.user_data
+                        user: request.user_data,
+                        request_id: request.key,
                     }}
                 >
                     <Button type="primary">Save</Button>
