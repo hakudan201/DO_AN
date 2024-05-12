@@ -99,11 +99,36 @@ class BookcopyController extends Controller
             'price' => 'required|integer',
             'status' => 'required',
             'location' => 'required'
-
         ]);
         $bookcopy->update($validatedData);
         return response()->json(['message' => 'Library updated successfully', 'bookcopy' => $bookcopy]);
     }
+    public function createNewBookCopy(Request $request)
+    {
+        $curr_user = auth()->user();
+
+        // Validate the incoming request data
+        $request->merge(['library_id' =>    $curr_user->library_id]);
+
+        $validatedData = $request->validate([
+            'ISBN' => 'required|string|max:10',
+            'numOfPages' => 'required|integer',
+            'year_published' => 'required|integer',
+            'format' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'status' => 'required',
+            'location' => 'required',
+            'book_id' => 'required',
+            'library_id' => 'required'
+        ]);
+        // return $validatedData;
+        // Create a new Bookcopy instance with the validated data
+        $bookcopy = Bookcopy::create($validatedData);
+
+        // Return a JSON response with success message and the newly created bookcopy
+        return response()->json(['message' => 'Library inserted successfully', 'bookcopy' => $bookcopy]);
+    }
+
 
     /**
      * Remove the specified resource from storage.

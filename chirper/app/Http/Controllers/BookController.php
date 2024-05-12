@@ -100,6 +100,16 @@ class BookController extends Controller
         return response()->json(['message' => 'Library updated successfully', 'book' => $book]);
     }
 
+    public function getAllBook()
+    {
+        $curr_user = auth()->user();
+        $books = Book::with('genres')->get();
+        return [
+            'books' => $books,
+        ];
+        // return $books;
+    }
+
     /**
      * Remove the specified resource from storage.
      */

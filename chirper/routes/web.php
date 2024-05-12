@@ -54,4 +54,12 @@ Route::resource('requests', RequestController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
+Route::middleware('auth')->group(function () {
+    Route::get('/getAllBook', [BookController::class, 'getAllBook']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/createNewBookCopy', [BookcopyController::class, 'createNewBookCopy']);
+});
+
 require __DIR__ . '/auth.php';
