@@ -53,7 +53,14 @@ class RequestController extends Controller
      */
     public function show(Request $request)
     {
-        return $request;
+        $book = $request->book;
+        $bookcopy = $request->bookcopy;
+        $user = $request->user;
+        return Inertia::render('Requests/RequestInformation', [
+            'book' => $book,
+            'bookcopy' => $bookcopy,
+            'user' => $user
+        ]);
     }
 
     /**

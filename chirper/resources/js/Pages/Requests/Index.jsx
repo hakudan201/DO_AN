@@ -4,7 +4,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 
 export default function Index({ auth, requests }) {
-
     const columns = [
         {
             title: "user_name",
@@ -125,8 +124,12 @@ export default function Index({ auth, requests }) {
             width: 100,
             render: (request) => (
                 <Link
-                    href={route("users.show", {id: request.key})}
-                    data={{ id: request.key, title: request.book_title }}
+                    href={route("requests.show", { id: request.key })}
+                    data={{
+                        book: request.book_data,
+                        bookcopy: request.bookcopy_data,
+                        user: request.user_data
+                    }}
                 >
                     <Button type="primary">Save</Button>
                 </Link>
@@ -142,6 +145,9 @@ export default function Index({ auth, requests }) {
         status: request.status,
         user_name: request.user.name,
         book_title: request.bookcopy.book.title,
+        book_data: request.bookcopy.book,
+        bookcopy_data: request.bookcopy,
+        user_data: request.user
     }));
 
     const onChange = (pagination, filters, sorter, extra) => {

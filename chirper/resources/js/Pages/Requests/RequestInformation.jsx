@@ -3,24 +3,20 @@ import { Badge, Descriptions, Row, Col, Button } from "antd";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage } from "@inertiajs/react";
 
-export default function RequestInformation({ auth }) {
+export default function RequestInformation({ auth, book, bookcopy, user }) {
     const { props } = usePage();
     const { requestData } = props;
     const items = [
         {
             key: "1",
-            label: "Product",
-            children: "Cloud Database",
+            label: "Sach",
+            children: book.title,
         },
         {
             key: "2",
-            label: "Billing Mode",
-            children: "Prepaid",
-        },
-        {
-            key: "3",
-            label: "Automatic Renewal",
-            children: "YES",
+            label: "Tac gia",
+            span: 2,
+            children: book.author,
         },
         {
             key: "4",
@@ -30,7 +26,7 @@ export default function RequestInformation({ auth }) {
         {
             key: "5",
             label: "Usage Time",
-            span: 2,
+            span: 4,
             children: "2019-04-24 18:00:00",
         },
         {
@@ -51,7 +47,7 @@ export default function RequestInformation({ auth }) {
         },
         {
             key: "9",
-            label: "Official Receipts",
+            label: "Official ",
             children: "$60.00",
         },
         {
@@ -93,7 +89,7 @@ export default function RequestInformation({ auth }) {
                 <Col xs={24} sm={20} md={100} lg={100} xl={100}>
                     {/* Control the width with Col */}
                     <Descriptions
-                        title="User Info"
+                        title="Request Information"
                         layout="vertical"
                         bordered
                         items={items}
