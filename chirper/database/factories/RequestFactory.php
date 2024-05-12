@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
-// use App\Models\Book;
 use App\Models\Bookcopy;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Carbon\Carbon;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Request>
@@ -21,20 +21,33 @@ class RequestFactory extends Factory
     {
         $userId = User::where('role', 1)->inRandomOrder()->first()->id; // Sửa điều kiện lấy UserID
         $bookcopyId = Bookcopy::inRandomOrder()->first()->id;
+        $statuses = ['pending', 'denied', 'ready', 'canceled', 'active', 'completed'];
+        $status = $this->faker->randomElement($statuses);
 
-        // Tính toán ngày mượn, ngày trả và trạng thái dựa trên ngày mượn và trả
-        $borrow_date = $this->faker->dateTimeBetween('-10 years', 'now')->format('Y-m-d');
-        $checkout_date = $this->faker->boolean() ? $this->faker->dateTimeBetween($borrow_date, '+3 days')->format('Y-m-d') : null;
-        $return_date = $checkout_date ? ($this->faker->boolean() ? $this->faker->dateTimeBetween($checkout_date, '+3 days')->format('Y-m-d') : null) : null;
-        $status = $checkout_date ? ($return_date ? 'Returned' : 'Active') : 'Pending';
+        $borrowDate = $this->faker->dateTimeBetween('-3 days', 'now');
+
+        $checkoutDate = null;
+        if ($status === 'completed' || $status === 'active') {
+            $checkoutDate = $this->faker->dateTimeBetween($borrowDate, '+2 days');
+        }
+
+        $returnDate = null;
+        if ($checkoutDate !== null && $status === 'completed') {
+            $returnDate = $this->faker->dateTimeBetween($checkoutDate, '+40 days');
+        }
+
+        $dueDate = null;
+        if ($checkoutDate !== null) {
+            $dueDate = Carbon::parse($checkoutDate)->addDays(30)->format('Y-m-d');
+        }
 
         return [
             'user_id' => $userId,
             'bookcopy_id' => $bookcopyId,
-            'borrow_date' => $borrow_date,
-            'checkout_date' => $checkout_date,
-            'due_date' => $checkout_date ? date('Y-m-d', strtotime($checkout_date . ' + 7 days')) : null,
-            'return_date' => $return_date,
+            'borrow_date' => $borrowDate,
+            'checkout_date' => $checkoutDate,
+            'due_date' => $dueDate,
+            'return_date' => $returnDate,
             'status' => $status,
         ];
     }

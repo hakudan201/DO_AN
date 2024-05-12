@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge, Descriptions, Row, Col, Button } from "antd";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, usePage, Link } from "@inertiajs/react";
 import axios from "axios";
 
 export default function RequestInformation({
@@ -14,22 +14,22 @@ export default function RequestInformation({
     const items = [
         {
             key: "1",
-            label: "Sach",
+            label: "Tên sách",
             children: book.title,
         },
         {
             key: "2",
-            label: "Tac gia",
+            label: "Tác giả",
             children: book.author,
         },
         {
             key: "3",
-            label: "ISBN",
+            label: "Mã ISBN",
             children: bookcopy.ISBN,
         },
         {
             key: "4",
-            label: "Nguoi muon",
+            label: "Người mượn",
             children: user.name,
         },
         {
@@ -39,36 +39,36 @@ export default function RequestInformation({
         },
         {
             key: "6",
-            label: "So dien thoai",
+            label: "Số điện thoại",
             children: user.phone,
         },
         {
             key: "7",
-            label: "Status",
+            label: "Trạng thái",
             span: 3,
             children: <Badge status="default" text={request.status} />,
         },
         {
             key: "8",
-            label: "Ngay muon",
+            label: "Ngày mượn sách",
             children: request.borrow_date,
         },
         {
             key: "9",
-            label: "Ngay nhan sach",
+            label: "Ngày nhận sách",
             children: request.checkout_date,
             span: 2,
         },
         request.due_date &&
             request.return_date && {
                 key: "10",
-                label: "Han tra sach",
+                label: "Hạn trả sách",
                 children: request.due_date,
             },
         request.due_date &&
             request.return_date && {
                 key: "11",
-                label: "Ngay tra sach",
+                label: "Ngày trả sách",
                 children: request.return_date,
             },
         // {
@@ -96,9 +96,10 @@ export default function RequestInformation({
     const handleAcceptClick = async () => {
         try {
             const response = await axios.post("/requests/updateStatus", {
-                requestId: request.id,
+                id: request.id,
                 newStatus: "ready",
             });
+            window.location.reload();
 
             console.log("Status updated successfully:", response.data);
             // Optionally, perform any additional actions upon successful update
@@ -111,9 +112,10 @@ export default function RequestInformation({
     const handleDenyClick = async () => {
         try {
             const response = await axios.post("/requests/updateStatus", {
-                requestId: request.id,
+                id: request.id,
                 newStatus: "denied",
             });
+            window.location.reload();
 
             console.log("Status updated successfully:", response.data);
             // Optionally, perform any additional actions upon successful update
@@ -126,9 +128,10 @@ export default function RequestInformation({
     const handleCheckoutClick = async () => {
         try {
             const response = await axios.post("/requests/updateStatus", {
-                requestId: request.id,
+                id: request.id,
                 newStatus: "active",
             });
+            window.location.reload();
 
             console.log("Status updated successfully:", response.data);
             // Optionally, perform any additional actions upon successful update
@@ -141,9 +144,10 @@ export default function RequestInformation({
     const handleCancelClick = async () => {
         try {
             const response = await axios.post("/requests/updateStatus", {
-                requestId: request.id,
+                id: request.id,
                 newStatus: "canceled",
             });
+            window.location.reload();
 
             console.log("Status updated successfully:", response.data);
             // Optionally, perform any additional actions upon successful update
@@ -159,6 +163,7 @@ export default function RequestInformation({
                 id: request.id,
                 newStatus: "completed",
             });
+            window.location.reload();
 
             // console.log("Status updated successfully:", response.data);
             // Optionally, perform any additional actions upon successful update
@@ -226,9 +231,11 @@ export default function RequestInformation({
                         layout="vertical"
                         bordered
                         items={items}
-                        // extra={
-                        //     (<Button type="primary">Edit1</Button>)
-                        // }
+                        extra={
+                            <Link href={route('requests.index')}>
+                                <Button type="primary">Quay lại</Button>
+                            </Link>
+                        }
                     />
                     {buttonSet}
                 </Col>

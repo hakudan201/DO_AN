@@ -51,7 +51,7 @@ Route::resource('libraries', LibraryController::class)
     ->middleware(['auth', 'verified']);
 
 Route::resource('requests', RequestController::class)
-    // ->only(['index', 'store', 'update', 'destroy', 'show'])
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
 Route::POST('/requests/updateStatus', [RequestController::class, 'updateStatus'])->middleware(['auth', 'verified']);

@@ -6,15 +6,15 @@ import { Head, Link } from "@inertiajs/react";
 export default function Index({ auth, requests }) {
     const columns = [
         {
-            title: "user_name",
+            title: "Người mượn",
             dataIndex: "user_name",
         },
         {
-            title: "book_title",
+            title: "Tên sách",
             dataIndex: "book_title",
         },
         {
-            title: "borrow_date",
+            title: "Ngày mượn",
             dataIndex: "borrow_date",
             defaultSortOrder: "descend",
             sorter: (a, b) => {
@@ -33,7 +33,7 @@ export default function Index({ auth, requests }) {
             },
         },
         {
-            title: "checkout_date",
+            title: "Ngày nhận",
             dataIndex: "checkout_date",
             // defaultSortOrder: "descend",
             sorter: (a, b) => {
@@ -52,7 +52,7 @@ export default function Index({ auth, requests }) {
             },
         },
         {
-            title: "due_date",
+            title: "Hạn trả",
             dataIndex: "due_date",
             // defaultSortOrder: "descend",
             sorter: (a, b) => {
@@ -71,7 +71,7 @@ export default function Index({ auth, requests }) {
             },
         },
         {
-            title: "return_date",
+            title: "Ngày trả",
             dataIndex: "return_date",
             // defaultSortOrder: "descend",
             sorter: (a, b) => {
@@ -91,28 +91,32 @@ export default function Index({ auth, requests }) {
         },
 
         {
-            title: "Status",
+            title: "Trạng thái",
             dataIndex: "status",
             filters: [
                 {
-                    text: "Pending",
-                    value: "Pending",
+                    text: "Đang chờ",
+                    value: "pending",
                 },
                 {
-                    text: "Accepted",
-                    value: "Accepted",
+                    text: "Sẵn sàng",
+                    value: "ready",
                 },
                 {
-                    text: "Denied",
-                    value: "Denied",
+                    text: "Bị từ chối",
+                    value: "denied",
                 },
                 {
-                    text: "Active",
-                    value: "Active",
+                    text: "Đang mượn",
+                    value: "active",
                 },
                 {
-                    text: "Returned",
-                    value: "Returned",
+                    text: "Bị huỷ",
+                    value: "canceled",
+                },
+                {
+                    text: "Hoàn thành",
+                    value: "completed",
                 },
             ],
             onFilter: (value, record) => record.status.indexOf(value) === 0,
@@ -132,7 +136,7 @@ export default function Index({ auth, requests }) {
                         request_id: request.key,
                     }}
                 >
-                    <Button type="primary">Save</Button>
+                    <Button type="primary">Xem</Button>
                 </Link>
             ),
         },
@@ -148,7 +152,7 @@ export default function Index({ auth, requests }) {
         book_title: request.bookcopy.book.title,
         book_data: request.bookcopy.book,
         bookcopy_data: request.bookcopy,
-        user_data: request.user
+        user_data: request.user,
     }));
 
     const onChange = (pagination, filters, sorter, extra) => {
