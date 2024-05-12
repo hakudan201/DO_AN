@@ -59,12 +59,9 @@ export default function Index({ auth, books, lib_name }) {
         form.validateFields()
             .then((values) => {
                 axios
-                    .post("/createNewBookCopy", values)
-                    .then((response) => {
-                        console.log("Response:", response.data);
-                    })
+                    .post("/bookcopies", values)
                     .catch((error) => {
-                        // console.error("Error:", error);
+                        console.error("Error:", error);
                         // Xử lý lỗi (nếu có)
                     });
 
@@ -334,13 +331,21 @@ export default function Index({ auth, books, lib_name }) {
                                 label="Tình trạng"
                             >
                                 <Select placeholder="Chọn tình trạng">
-                                    <Option value="Available">Available</Option>
-                                    <Option value="Reserved">Reserved</Option>
-                                    <Option value="Borrowed">Borrowed</Option>
-                                    <Option value="Lost">Lost</Option>
-                                    <Option value="Maintenance">
+                                    <Select.Option value="Available">
+                                        Available
+                                    </Select.Option>
+                                    <Select.Option value="Reserved">
+                                        Reserved
+                                    </Select.Option>
+                                    <Select.Option value="Borrowed">
+                                        Borrowed
+                                    </Select.Option>
+                                    <Select.Option value="Lost">
+                                        Lost
+                                    </Select.Option>
+                                    <Select.Option value="Maintenance">
                                         Maintenance
-                                    </Option>
+                                    </Select.Option>
                                 </Select>
                             </Form.Item>
                         </div>
