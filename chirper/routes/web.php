@@ -56,5 +56,8 @@ Route::resource('requests', RequestController::class)
 
 Route::POST('/requests/updateStatus', [RequestController::class, 'updateStatus'])->middleware(['auth', 'verified']);
 
+Route::middleware('auth')->group(function () {
+    Route::get('/getAllBook', [BookController::class, 'getAllBook']);
+});
 
 require __DIR__ . '/auth.php';

@@ -42,24 +42,39 @@ class BookcopyController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    // public function create()
+    // {
+    //     //
+    // }
 
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(Request $request): RedirectResponse
-    // {
-    //     $validated = $request->validate([
-    //         'message' => 'required|string|max:255',
-    //     ]);
+    public function store(Request $request): RedirectResponse
+    {
+        $curr_user = auth()->user();
 
-    //     $request->user()->chirps()->create($validated);
+        // Validate the incoming request data
+        $request->merge(['library_id' =>    $curr_user->library_id]);
+        // return $request;
+        $validatedData = $request->validate([
+            'ISBN' => 'required|string|max:10',
+            'numOfPages' => 'required|integer',
+            'year_published' => 'required|integer',
+            'format' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'status' => 'required',
+            'location' => 'required',
+            'book_id' => 'required',
+            'library_id' => 'required'
+        ]);
 
-    //     return redirect(route('chirps.index'));
-    // }
+        Bookcopy::create($validatedData);
+
+        // Return a JSON response with success message and the newly created bookcopy
+
+        return redirect(route('bookcopies.index'));
+    }
 
     /**
      * Display the specified resource.
@@ -99,7 +114,6 @@ class BookcopyController extends Controller
             'price' => 'required|integer',
             'status' => 'required',
             'location' => 'required'
-
         ]);
         $bookcopy->update($validatedData);
         return response()->json(['message' => 'Library updated successfully', 'bookcopy' => $bookcopy]);

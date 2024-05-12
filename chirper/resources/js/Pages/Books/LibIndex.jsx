@@ -1,8 +1,19 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { SearchOutlined } from "@ant-design/icons";
 import { Head } from "@inertiajs/react";
 import React, { useRef, useState } from "react";
-import { Table, Space, Tag } from "antd";
+import {
+    Button,
+    DatePicker,
+    Drawer,
+    Form,
+    Input,
+    Select,
+    Space,
+    Table,
+    Tag,
+    InputNumber,
+} from "antd";
+import axios from "axios";
 
 export default function Index({ auth, books, lib_name }) {
     const originData = books.map((book) => ({
@@ -12,8 +23,54 @@ export default function Index({ auth, books, lib_name }) {
         publisher: book.publisher,
         description: book.description,
         count: book.bookcopies_count,
-        genres: book.genres.map((genre) => genre.name)
+        genres: book.genres.map((genre) => genre.name),
     }));
+
+    const [open, setOpen] = useState(false);
+    const [form] = Form.useForm();
+    const [listAllBook, setListAllBookBook] = useState([]);
+    const [selectedBookId, setSelectedBookId] = useState(null);
+    const [selectedBook, setSelectedBook] = useState(null);
+
+    const showDrawer = async () => {
+        setSelectedBookId(null);
+        axios
+            .get("/getAllBook")
+            .then((response) => {
+                const books = response.data?.books;
+                const res = books.map((book) => ({
+                    value: book.id.toString(),
+                    label: book.title,
+                    author: book.author,
+                }));
+                setListAllBookBook(res);
+                setOpen(true);
+            })
+            .catch((error) => {
+                console.error("Error fetching books:", error);
+            });
+    };
+    const onClose = () => {
+        console.log(form.getFieldsValue());
+        setOpen(false);
+    };
+
+    const onSubmit = () => {
+        form.validateFields()
+            .then((values) => {
+                axios
+                    .post("/bookcopies", values)
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        // Xử lý lỗi (nếu có)
+                    });
+
+                setOpen(false);
+            })
+            .catch((errorInfo) => {
+                console.log("Validation failed:", errorInfo);
+            });
+    };
 
     const columns = [
         {
@@ -22,7 +79,7 @@ export default function Index({ auth, books, lib_name }) {
             render: (_, { genres }) => (
                 <>
                     {genres.map((genre, index) => {
-                        let color = 'geekblue';
+                        let color = "geekblue";
                         // Render the Tag component with dynamically assigned color and unique key
                         return (
                             <Tag color={color} key={`${genre}-${index}`}>
@@ -87,8 +144,214 @@ export default function Index({ auth, books, lib_name }) {
                 bordered
                 dataSource={originData}
                 columns={columns}
-                title={() => 'Thư viện '+lib_name}
+                title={() => (
+                    <div className="flex justify-between items-center">
+                        <h3>Thư viện {lib_name}</h3>{" "}
+                        <Button
+                            onClick={showDrawer}
+                            type="primary"
+                            style={{
+                                marginBottom: 16,
+                            }}
+                        >
+                            Add a row
+                        </Button>
+                    </div>
+                )}
             />
+
+            <Drawer
+                title="Create a new account"
+                width={720}
+                onClose={onClose}
+                open={open}
+                styles={{
+                    body: {
+                        paddingBottom: 80,
+                    },
+                }}
+                extra={
+                    <Space>
+                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={onSubmit} type="primary">
+                            Submit
+                        </Button>
+                    </Space>
+                }
+            >
+                <Form form={form} layout="vertical" hideRequiredMark>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="book_id"
+                                label="Tên sách"
+                            >
+                                <Select
+                                    className="w-full"
+                                    showSearch
+                                    placeholder="Search to Select"
+                                    filterOption={(input, option) =>
+                                        (
+                                            option?.label.toLowerCase() ?? ""
+                                        ).includes(input.toLowerCase())
+                                    }
+                                    filterSort={(optionA, optionB) =>
+                                        (optionA?.label ?? "")
+                                            .toLowerCase()
+                                            .localeCompare(
+                                                (
+                                                    optionB?.label ?? ""
+                                                ).toLowerCase()
+                                            )
+                                    }
+                                    options={listAllBook}
+                                    onChange={(value) => {
+                                        const selected = listAllBook.filter(
+                                            (item) => item.value == value
+                                        );
+                                        setSelectedBook(
+                                            selected ? selected[0] : null
+                                        );
+                                    }}
+                                />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item label="Tên tác giả">
+                                <div
+                                    className="w-full"
+                                    style={{
+                                        minHeight: "32px",
+                                        lineHeight: "32px",
+                                    }}
+                                >
+                                    {selectedBook
+                                        ? selectedBook.author
+                                        : "Không có"}
+                                </div>
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="ISBN"
+                                label="ISBN"
+                            >
+                                <Input className="w-full" />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="numOfPages"
+                                label="Số trang"
+                            >
+                                <InputNumber className="w-full" />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="year_published"
+                                label="Năm xuất bản"
+                            >
+                                <InputNumber className="w-full" />
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="format"
+                                label="Dạng sách"
+                            >
+                                <Input className="w-full" />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="price"
+                                label="Giá tiền"
+                            >
+                                <InputNumber className="w-full" />
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="location"
+                                label="Vị trí"
+                            >
+                                <Input className="w-full" />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="status"
+                                label="Tình trạng"
+                            >
+                                <Select placeholder="Chọn tình trạng">
+                                    <Select.Option value="Available">
+                                        Available
+                                    </Select.Option>
+                                    <Select.Option value="Reserved">
+                                        Reserved
+                                    </Select.Option>
+                                    <Select.Option value="Borrowed">
+                                        Borrowed
+                                    </Select.Option>
+                                    <Select.Option value="Lost">
+                                        Lost
+                                    </Select.Option>
+                                    <Select.Option value="Maintenance">
+                                        Maintenance
+                                    </Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </div>
+                    </div>
+                </Form>
+            </Drawer>
         </AuthenticatedLayout>
     );
 }
