@@ -109,7 +109,7 @@ class BookcopyController extends Controller
 
         // Validate the incoming request data
         $request->merge(['library_id' =>    $curr_user->library_id]);
-
+        // return $request;
         $validatedData = $request->validate([
             'ISBN' => 'required|string|max:10',
             'numOfPages' => 'required|integer',
@@ -121,8 +121,7 @@ class BookcopyController extends Controller
             'book_id' => 'required',
             'library_id' => 'required'
         ]);
-        // return $validatedData;
-        // Create a new Bookcopy instance with the validated data
+        
         $bookcopy = Bookcopy::create($validatedData);
 
         // Return a JSON response with success message and the newly created bookcopy

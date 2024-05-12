@@ -47,7 +47,7 @@ export default function Index({ auth, books, lib_name }) {
                 setOpen(true);
             })
             .catch((error) => {
-                console.error("Error fetching books:", error);  
+                console.error("Error fetching books:", error);
             });
     };
     const onClose = () => {
@@ -62,7 +62,6 @@ export default function Index({ auth, books, lib_name }) {
                     .post("/createNewBookCopy", values)
                     .then((response) => {
                         console.log("Response:", response.data);
-                        // Xử lý response từ server (nếu cần)
                     })
                     .catch((error) => {
                         // console.error("Error:", error);
@@ -249,7 +248,7 @@ export default function Index({ auth, books, lib_name }) {
                                         required: true,
                                     },
                                 ]}
-                                name="isbn"
+                                name="ISBN"
                                 label="ISBN"
                             >
                                 <Input className="w-full" />
