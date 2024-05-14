@@ -24,6 +24,7 @@ export default function Index({ auth, books }) {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const [listAllGenre, setListAllGenre] = useState([]);
+    const [selected, setSelected] = useState([]);
 
     const { TextArea } = Input;
     const showDrawer = async () => {
@@ -33,7 +34,7 @@ export default function Index({ auth, books }) {
             const res = genres.map((genre) => ({
                 key: genre.id.toString(),
                 label: genre.name,
-                value: genre.name
+                value: genre.name,
             }));
             setListAllGenre(res);
             setOpen(true);
@@ -51,12 +52,15 @@ export default function Index({ auth, books }) {
     const onSubmit = () => {
         form.validateFields()
             .then((values) => {
-                axios.post("/bookcopies", values).catch((error) => {
-                    console.error("Error:", error);
-                    // Xử lý lỗi (nếu có)
-                });
-
-                setOpen(false);
+                if (selected.length != 0) {
+                    values.genre = selected;
+                    console.log(values);
+                    axios.post("/bookcopies", values).catch((error) => {
+                        console.error("Error:", error);
+                        // Xử lý lỗi (nếu có)
+                    });
+                    setOpen(false);
+                }
             })
             .catch((errorInfo) => {
                 console.log("Validation failed:", errorInfo);
@@ -64,6 +68,7 @@ export default function Index({ auth, books }) {
     };
 
     const handleChange = (value) => {
+        setSelected(value);
         console.log(`selected ${value}`);
     };
 
@@ -498,7 +503,7 @@ export default function Index({ auth, books }) {
                             </div>
                             <div>
                                 <Form.Item
-                                    rules={[{ required: true }]}
+                                    // rules={[{ required: true }]}
                                     name="genre"
                                     label="Thể loại"
                                 >
