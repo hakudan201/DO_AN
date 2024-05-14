@@ -32,9 +32,8 @@ export default function Index({ auth, books }) {
         axios.get("/genres").then((response) => {
             const genres = response.data;
             const res = genres.map((genre) => ({
-                key: genre.id.toString(),
+                value: genre.id.toString(),
                 label: genre.name,
-                value: genre.name,
             }));
             setListAllGenre(res);
             setOpen(true);
@@ -519,6 +518,12 @@ export default function Index({ auth, books }) {
                                             style={{
                                                 width: "100%",
                                             }}
+                                            filterOption={(input, option) =>
+                                                (
+                                                    option?.label.toLowerCase() ??
+                                                    ""
+                                                ).includes(input.toLowerCase())
+                                            }
                                             placeholder="Please select"
                                             onChange={handleChange}
                                             options={listAllGenre}
