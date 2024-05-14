@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChirpController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookcopyController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\LibraryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
@@ -54,10 +55,15 @@ Route::resource('requests', RequestController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth', 'verified']);
 
+Route::resource('genres', GenreController::class)
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
+    ->middleware(['auth', 'verified']);
+
 Route::POST('/requests/updateStatus', [RequestController::class, 'updateStatus'])->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/getAllBook', [BookController::class, 'getAllBook']);
 });
+
 
 require __DIR__ . '/auth.php';

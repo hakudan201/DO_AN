@@ -28,7 +28,7 @@ export default function Index({ auth, books, lib_name }) {
 
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
-    const [listAllBook, setListAllBookBook] = useState([]);
+    const [listAllBook, setListAllBook] = useState([]);
     const [selectedBookId, setSelectedBookId] = useState(null);
     const [selectedBook, setSelectedBook] = useState(null);
 
@@ -43,7 +43,7 @@ export default function Index({ auth, books, lib_name }) {
                     label: book.title,
                     author: book.author,
                 }));
-                setListAllBookBook(res);
+                setListAllBook(res);
                 setOpen(true);
             })
             .catch((error) => {

@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         // Author::factory()->count(20)->create();
         Genre::factory()->count(50)->create();
         // AuthorsBook::factory()->count(20)->create();
-        GenresBook::factory()->count(70)->create();
+        GenresBook::factory()->count(50)->create();
         Bookcopy::factory()->count(100)->create([
             'library_id' => function () use ($libraries) {
                 return $libraries->random(); // Assign a random library to each user
