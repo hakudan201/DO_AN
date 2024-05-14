@@ -24,9 +24,9 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
-                                <NavLink href={route('chirps.index')} active={route().current('chirps.index')}>
+                                {/* <NavLink href={route('chirps.index')} active={route().current('chirps.index')}>
                                     Chirps
-                                </NavLink>
+                                </NavLink> */}
                                 {(user.role === 'librarian' || user.role === 'admin') && (
                                     <NavLink href={route('users.index')} active={route().current('users.index')}>
                                         Người dùng

@@ -19,6 +19,7 @@ export default function Edit({ auth, mustVerifyEmail, status, user }) {
                     <div className="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                         <UpdateUserInformationForm
                             user={user}
+                            auth_role={auth.user.role}
                             // mustVerifyEmail={mustVerifyEmail}
                             // status={status}
                             className="max-w-xl"

@@ -7,7 +7,7 @@ import { SearchOutlined } from "@ant-design/icons";
 
 // import { route } from '@inertiajs/inertia-react';
 
-export default function Index({ auth, users, lib_name }) {
+export default function LibIndex({ auth, users, lib_name }) {
     const { data, setData, post, processing, reset, errors } = useForm({
         message: "",
     });
@@ -32,6 +32,7 @@ export default function Index({ auth, users, lib_name }) {
         setSearchedColumn(dataIndex);
     };
     const handleReset = (clearFilters) => {
+
         clearFilters();
         setSearchText("");
     };
@@ -141,11 +142,6 @@ export default function Index({ auth, users, lib_name }) {
             dataIndex: "name",
             key: "name",
             ...getColumnSearchProps("name"),
-            // render: (text, record) => (
-            //     <a href={route("bookcopies.show", { id: record.key })}>
-            //         {text}
-            //     </a>
-            // ),
         },
         {
             title: "Email",
@@ -170,7 +166,7 @@ export default function Index({ auth, users, lib_name }) {
             key: "phone",
             ...getColumnSearchProps("phone"),
         },
-        {
+        auth.user.role === 'librarian' && {
             title: "Ngày hết hạn",
             dataIndex: "due_membership",
             key: "due_membership",
@@ -178,19 +174,15 @@ export default function Index({ auth, users, lib_name }) {
         {
             title: "Hành động",
             key: "operation",
-            // dataIndex: 'key',
             fixed: "right",
             width: 100,
-            // render: (user) => (
-            //     <a href={route('user.show', { id: user.id })}>Update</a> // Corrected here
-            // )
             render: (user) => (
                 <Link href={route("users.show", { id: user.key })}>
-                    <Button type="primary">Update</Button>
+                    <Button type="primary">Xem</Button>
                 </Link>
             ),
         },
-    ];
+    ].filter(Boolean);;
 
     return (
         <AuthenticatedLayout user={auth.user}>

@@ -30,15 +30,13 @@ class UserController extends Controller
                 ->latest()
                 ->first();
 
-            return Inertia::render('Users/Index', [
+            return Inertia::render('Users/LibIndex', [
                 'users' => $users,
                 'lib_name' => $lib_name->library->name
             ]);
         } else if ($curr_user->role == 'admin') {
-            $users = User::where('role', 'librarian')
-                ->latest()
-                ->get();
-            return Inertia::render('Users/Index', [
+            $users = User::where('id', '!=', $curr_user->id)->get();
+            return Inertia::render('Users/AdminIndex', [
                 'users' => $users,
             ]);
         }
@@ -74,7 +72,7 @@ class UserController extends Controller
     {
         $user = User::find($user_id);
         return Inertia::render('Users/Edit', [
-            'user' => $user
+            'user' => $user,
         ]);
     }
 
@@ -103,7 +101,8 @@ class UserController extends Controller
             'DOB' => 'required|date',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:10',
-            'due_membership' => 'required|after_or_equal:today'
+            'due_membership' => 'required',
+            'role' => 'required'
         ]);
         $user->update($validated);
         return redirect()->route('users.show', ['user' => $user->id]);

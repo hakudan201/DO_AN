@@ -4,8 +4,13 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import { Link, useForm, usePage } from "@inertiajs/react";
 import { Transition } from "@headlessui/react";
+import { Select } from "antd";
 
-export default function UpdateUserInformationForm({ className = "", user }) {
+export default function UpdateUserInformationForm({
+    className = "",
+    user,
+    auth_role,
+}) {
     // const user = usePage().props.auth.user;
     // const { id, name, email, DOB, address, phone, role, due_membership } = user;
 
@@ -16,12 +21,17 @@ export default function UpdateUserInformationForm({ className = "", user }) {
             DOB: user.DOB,
             address: user.address,
             phone: user.phone,
-            due_membership: user.due_membership
+            due_membership: user.due_membership,
+            role: user.role,
         });
+
+    const handleChange = (value) => {
+        setData("role", value);
+    };
 
     const submit = (e) => {
         e.preventDefault();
-
+        // console.log(e);
         patch(route("users.update", { id: user.id }));
     };
 
@@ -112,17 +122,44 @@ export default function UpdateUserInformationForm({ className = "", user }) {
                     <InputError className="mt-2" message={errors.phone} />
                 </div>
 
-                <div>
-                    <InputLabel htmlFor="due_membership" value="Due membership" />
-                    <TextInput
-                        id="due_membership"
-                        type="date"
-                        value={data.due_membership}
-                        onChange={(e) => setData("due_membership", e.target.value)}
-                        required
-                    />
-                    <InputError message={errors.due_membership} />
-                </div>
+                {auth_role === "librarian" && (
+                    <div>
+                        <InputLabel
+                            htmlFor="due_membership"
+                            value="Due Membership"
+                        />
+                        <TextInput
+                            id="due_membership"
+                            type="date"
+                            value={data.due_membership}
+                            onChange={(e) =>
+                                setData("due_membership", e.target.value)
+                            }
+                            required
+                        />
+                        <InputError message={errors.due_membership} />
+                    </div>
+                )}
+
+                {auth_role === "admin" && (
+                    <div>
+                        <InputLabel htmlFor="role" value="Role" />
+                        <Select
+                            id="role"
+                            className="mt-1 block w-full"
+                            value={data.role}
+                            onChange={handleChange}
+                            required
+                        >
+                            <Select.Option value="librarian">
+                                Librarian
+                            </Select.Option>
+                            <Select.Option value="user">User</Select.Option>
+                        </Select>
+                        <InputError className="mt-2" message={errors.role} />
+                    </div>
+                )}
+
                 {/* {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">
