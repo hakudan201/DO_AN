@@ -1,7 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-
 import { SearchOutlined } from "@ant-design/icons";
-
 import { Head } from "@inertiajs/react";
 import React, { useRef, useState } from "react";
 import {
@@ -25,10 +23,9 @@ export default function Index({ auth, books }) {
     const [form] = Form.useForm();
     const [listAllGenre, setListAllGenre] = useState([]);
     const [selected, setSelected] = useState([]);
-
     const { TextArea } = Input;
+
     const showDrawer = async () => {
-        // setSelectedBookId(null);
         axios.get("/genres").then((response) => {
             const genres = response.data;
             const res = genres.map((genre) => ({
@@ -38,25 +35,19 @@ export default function Index({ auth, books }) {
             setListAllGenre(res);
             setOpen(true);
         });
-        //     .catch((error) => {
-        //         console.error("Error fetching books:", error);
-        //     });
     };
 
     const onClose = () => {
-        console.log(form.getFieldsValue());
         setOpen(false);
     };
 
     const onSubmit = () => {
         form.validateFields()
             .then((values) => {
-                if (selected.length != 0) {
+                if (selected.length !== 0) {
                     values.genre = selected;
-                    console.log(values);
-                    axios.post("/bookcopies", values).catch((error) => {
+                    axios.post("/books", values).catch((error) => {
                         console.error("Error:", error);
-                        // Xử lý lỗi (nếu có)
                     });
                     setOpen(false);
                 }
@@ -68,7 +59,6 @@ export default function Index({ auth, books }) {
 
     const handleChange = (value) => {
         setSelected(value);
-        console.log(`selected ${value}`);
     };
 
     const originData = books.map((book) => ({
@@ -117,23 +107,26 @@ export default function Index({ auth, books }) {
             </td>
         );
     };
-    // const [form] = Form.useForm();
+
     const [data, setData] = useState(originData);
     const [editingKey, setEditingKey] = useState("");
     const isEditing = (record) => record.key === editingKey;
+
     const edit = (record) => {
         form.setFieldsValue({
-            book_title: "",
-            age: "",
+            title: "",
+            author: "",
             publisher: "",
             description: "",
             ...record,
         });
         setEditingKey(record.key);
     };
+
     const cancel = () => {
         setEditingKey("");
     };
+
     const save = async (key) => {
         try {
             const row = await form.validateFields();
@@ -169,6 +162,7 @@ export default function Index({ auth, books }) {
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
+
     const handleReset = (clearFilters) => {
         clearFilters();
         setSearchText("");
@@ -257,7 +251,6 @@ export default function Index({ auth, books }) {
                 setTimeout(() => searchInput.current?.select(), 100);
             }
         },
-
         render: (text) =>
             searchedColumn === dataIndex ? (
                 <Highlighter
@@ -282,7 +275,6 @@ export default function Index({ auth, books }) {
                 <>
                     {genres.map((genre, index) => {
                         let color = "geekblue";
-                        // Render the Tag component with dynamically assigned color and unique key
                         return (
                             <Tag color={color} key={`${genre}-${index}`}>
                                 {genre.toUpperCase()}
@@ -350,6 +342,7 @@ export default function Index({ auth, books }) {
             },
         },
     ];
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -365,6 +358,7 @@ export default function Index({ auth, books }) {
             }),
         };
     });
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Users" />
@@ -397,159 +391,123 @@ export default function Index({ auth, books }) {
                         </div>
                     )}
                 />
-
-                <Drawer
-                    title="Create a new account"
-                    width={720}
-                    onClose={onClose}
-                    open={open}
-                    styles={{
-                        body: {
-                            paddingBottom: 80,
-                        },
-                    }}
-                    extra={
-                        <Space>
-                            <Button onClick={onClose}>Cancel</Button>
-                            <Button onClick={onSubmit} type="primary">
-                                Submit
-                            </Button>
-                        </Space>
-                    }
-                >
-                    <Form form={form} layout="vertical" hideRequiredMark>
-                        <div className="grid grid-cols-2 gap-4">
-                            {/* <div>
+            </Form>
+            <Drawer
+                title="Create a new account"
+                width={720}
+                onClose={onClose}
+                open={open}
+                styles={{
+                    body: {
+                        paddingBottom: 80,
+                    },
+                }}
+                extra={
+                    <Space>
+                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={onSubmit} type="primary">
+                            Submit
+                        </Button>
+                    </Space>
+                }
+            >
+                <Form form={form} layout="vertical" hideRequiredMark>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
                             <Form.Item
                                 rules={[
                                     {
                                         required: true,
                                     },
                                 ]}
-                                name="book_id"
+                                name="title"
                                 label="Tên sách"
                             >
-                                <Select
+                                <TextArea
+                                    id="title"
+                                    rows={1}
                                     className="w-full"
-                                    showSearch
-                                    placeholder="Search to Select"
+                                />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="author"
+                                label="Tác giả"
+                            >
+                                <TextArea
+                                    id="author"
+                                    rows={1}
+                                    className="w-full"
+                                />
+                            </Form.Item>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="publisher"
+                                label="Nhà xuất bản"
+                            >
+                                <TextArea
+                                    id="publisher"
+                                    rows={1}
+                                    className="w-full"
+                                />
+                            </Form.Item>
+                        </div>
+                        <div>
+                            <Form.Item name="genre" label="Thể loại">
+                                <Select
+                                    id="genre"
+                                    mode="multiple"
+                                    allowClear
+                                    style={{
+                                        width: "100%",
+                                    }}
                                     filterOption={(input, option) =>
                                         (
                                             option?.label.toLowerCase() ?? ""
                                         ).includes(input.toLowerCase())
                                     }
-                                    filterSort={(optionA, optionB) =>
-                                        (optionA?.label ?? "")
-                                            .toLowerCase()
-                                            .localeCompare(
-                                                (
-                                                    optionB?.label ?? ""
-                                                ).toLowerCase()
-                                            )
-                                    }
-                                    options={listAllBook}
-                                    onChange={(value) => {
-                                        const selected = listAllBook.filter(
-                                            (item) => item.value == value
-                                        );
-                                        setSelectedBook(
-                                            selected ? selected[0] : null
-                                        );
-                                    }}
+                                    placeholder="Please select"
+                                    onChange={handleChange}
+                                    options={listAllGenre}
                                 />
                             </Form.Item>
-                        </div> */}
-                            <div>
-                                <Form.Item
-                                    rules={[
-                                        {
-                                            required: true,
-                                        },
-                                    ]}
-                                    name="title"
-                                    label="Tên sách"
-                                >
-                                    <TextArea rows={1} className="w-full" />
-                                </Form.Item>
-                            </div>
-                            <div>
-                                <Form.Item
-                                    rules={[
-                                        {
-                                            required: true,
-                                        },
-                                    ]}
-                                    name="author"
-                                    label="Tác giả"
-                                >
-                                    <TextArea rows={1} className="w-full" />
-                                </Form.Item>
-                            </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <Form.Item
-                                    rules={[
-                                        {
-                                            required: true,
-                                        },
-                                    ]}
-                                    name="publisher"
-                                    label="Nhà xuất bản"
-                                >
-                                    <TextArea rows={1} className="w-full" />
-                                </Form.Item>
-                            </div>
-                            <div>
-                                <Form.Item
-                                    // rules={[{ required: true }]}
-                                    name="genre"
-                                    label="Thể loại"
-                                >
-                                    <Space
-                                        style={{
-                                            width: "100%",
-                                        }}
-                                        direction="vertical"
-                                    >
-                                        <Select
-                                            mode="multiple"
-                                            allowClear
-                                            style={{
-                                                width: "100%",
-                                            }}
-                                            filterOption={(input, option) =>
-                                                (
-                                                    option?.label.toLowerCase() ??
-                                                    ""
-                                                ).includes(input.toLowerCase())
-                                            }
-                                            placeholder="Please select"
-                                            onChange={handleChange}
-                                            options={listAllGenre}
-                                        />
-                                    </Space>
-                                </Form.Item>
-                            </div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
+                        <div>
+                            <Form.Item
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                name="description"
+                                label="Mô tả"
+                            >
+                                <TextArea
+                                    id="description"
+                                    rows={4}
+                                    className="w-full"
+                                />
+                            </Form.Item>
                         </div>
-                        <div className="grid grid-cols-1 gap-4">
-                            <div>
-                                <Form.Item
-                                    rules={[
-                                        {
-                                            required: true,
-                                        },
-                                    ]}
-                                    name="description"
-                                    label="Mô tả"
-                                >
-                                    <TextArea rows={4} className="w-full" />
-                                </Form.Item>
-                            </div>
-                        </div>
-                    </Form>
-                </Drawer>
-            </Form>
+                    </div>
+                </Form>
+            </Drawer>
         </AuthenticatedLayout>
     );
 }

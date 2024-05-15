@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\Rule;
 
 class BookController extends Controller
 {
@@ -56,15 +57,15 @@ class BookController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => 'required|string',
-            'author' => 'required|string',
-            'publisher' => 'required|string',
-            'description' => 'required'
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255|unique:books,title',
+            'author' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'description' => 'required|string|max:25555',
         ]);
 
-        Book::create($validated);
-
+        Book::create($validatedData);
+        // return $request;
         return redirect(route('books.index'));
     }
 
@@ -94,7 +95,12 @@ class BookController extends Controller
     public function update(Request $request, Book $book)
     {
         $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('books')->ignore($book->id), // Assuming $book is the current record being updated
+            ],
             'author' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
             'description' => 'required|string|max:25555',
