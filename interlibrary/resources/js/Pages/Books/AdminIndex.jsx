@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { SearchOutlined } from "@ant-design/icons";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import React, { useRef, useState } from "react";
 import {
     Drawer,
@@ -45,26 +45,32 @@ export default function Index({ auth, books }) {
     const onSubmit = async () => {
         try {
             const values = await form.validateFields();
-            const isBookExists = originData.some((book) => book.title === values.title);
+            const isBookExists = originData.some(
+                (book) => book.title === values.title
+            );
 
             if (isBookExists) {
                 form.setFields([
                     {
-                        name: 'title',
-                        errors: ['This book title already exists. Please choose a different title.'],
+                        name: "title",
+                        errors: [
+                            "This book title already exists. Please choose a different title.",
+                        ],
                     },
                 ]);
             } else {
                 // Proceed with form submission
                 const selectedValues = { ...values, genre: selected };
-                await axios.post("/books", selectedValues);
+                await axios
+                    .post("/books", selectedValues)
+                    // .then((response) => console.log(response));
+                window.location.reload();
                 setOpen(false);
             }
         } catch (errorInfo) {
             console.log("Validation failed:", errorInfo);
         }
     };
-
 
     const handleChange = (value) => {
         setSelected(value);
@@ -193,7 +199,8 @@ export default function Index({ auth, books }) {
     });
 
     const handleDelete = async (bookId) => {
-            await axios.delete(`/books/${bookId}`);
+        await axios.delete(`/books/${bookId}`);
+        window.location.reload();
     };
 
     const columns = [

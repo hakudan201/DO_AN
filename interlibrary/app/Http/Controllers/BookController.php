@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\GenresBook;
 use App\Models\Library;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -55,7 +56,7 @@ class BookController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $validatedData = $request->validate([
             'title' => 'required|string|max:255|unique:books,title',
@@ -64,20 +65,26 @@ class BookController extends Controller
             'description' => 'required|string|max:25555',
         ]);
 
-        Book::create($validatedData);
-        return redirect(route('books.index'));
+        $book = Book::create($validatedData);
+        foreach ($request->genre as $genreId) {
+            GenresBook::create([
+                'book_id' => $book->id,
+                'genre_id' => $genreId,
+            ]);
+        }
+        return 'ok';
+        // return redirect(route('books.index'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($book_id, $library_id)
+    public function show($book_id)
     {
-        // $book = Book::find($book_id);
-        // return Inertia::render('Books/Edit', [
-        //     'book' => $book
-        // ]);
-        return 'ok';
+        $book = Book::with('genres')->where('id', $book_id)->first();
+        return Inertia::render('Books/Edit', [
+            'book' => $book,
+        ]);
     }
 
     /**
@@ -93,19 +100,27 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        $validatedData = $request->validate([
-            'title' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('books')->ignore($book->id), // Assuming $book is the current record being updated
-            ],
-            'author' => 'required|string|max:255',
-            'publisher' => 'required|string|max:255',
-            'description' => 'required|string|max:25555',
-        ]);
-        $book->update($validatedData);
-        return response()->json(['message' => 'Library updated successfully', 'book' => $book]);
+        // $validatedData = $request->validate([
+        //     'title' => [
+        //         'required',
+        //         'string',
+        //         'max:255',
+        //         Rule::unique('books')->ignore($book->id), // Assuming $book is the current record being updated
+        //     ],
+        //     'author' => 'required|string|max:255',
+        //     'publisher' => 'required|string|max:255',
+        //     'description' => 'required|string|max:25555',
+        // ]);
+        // $book->update($validatedData);
+        // GenresBook::where('book_id', $book->id)->delete();
+        // // foreach ($request->genres as $genreId) {
+        // //     GenresBook::create([
+        // //         'book_id' => $book->id,
+        // //         'genre_id' => $genreId,
+        // //     ]);
+        // // }
+        // return redirect()->route('books.show', ['book' => $book->id]);
+return $request;
     }
 
     public function getAllBook()
@@ -120,12 +135,15 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($bookId): RedirectResponse
+    public function destroy(Book $book)
     {
-        $book = Book::findOrFail($bookId);
-        
-        $book->delete();
+        // Gate::authorize('delete', $book);
 
-        return redirect()->route('books.index');
+        // $book = Book::findOrFail($book);
+
+        $book->delete();
+        GenresBook::where('book_id', $book->id)->delete();
+        return 'ok';
+        // return redirect()->route('books.index');
     }
 }

@@ -27,24 +27,24 @@ export default function AdminIndex({ auth, users, lib_name }) {
         role: user.role,
     }));
 
-    const showDrawer = async () => {
-        setSelectedBookId(null);
-        axios
-            .get("/getAllBook")
-            .then((response) => {
-                const books = response.data?.books;
-                const res = books.map((book) => ({
-                    value: book.id.toString(),
-                    label: book.title,
-                    author: book.author,
-                }));
-                setListAllBookBook(res);
-                setOpen(true);
-            })
-            .catch((error) => {
-                console.error("Error fetching books:", error);
-            });
-    };
+    // const showDrawer = async () => {
+    //     setSelectedBookId(null);
+    //     axios
+    //         .get("/getAllBook")
+    //         .then((response) => {
+    //             const books = response.data?.books;
+    //             const res = books.map((book) => ({
+    //                 value: book.id.toString(),
+    //                 label: book.title,
+    //                 author: book.author,
+    //             }));
+    //             setListAllBookBook(res);
+    //             setOpen(true);
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error fetching books:", error);
+    //         });
+    // };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
