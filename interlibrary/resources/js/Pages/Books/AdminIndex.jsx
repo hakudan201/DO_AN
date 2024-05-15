@@ -1,6 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { SearchOutlined } from "@ant-design/icons";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import React, { useRef, useState } from "react";
 import {
     Drawer,
@@ -73,90 +73,6 @@ export default function Index({ auth, books }) {
     const [searchedColumn, setSearchedColumn] = useState("");
     const [searchText, setSearchText] = useState("");
     const searchInput = useRef(null);
-
-    const EditableCell = ({
-        editing,
-        dataIndex,
-        title,
-        inputType,
-        record,
-        index,
-        children,
-        ...restProps
-    }) => {
-        const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-        return (
-            <td {...restProps}>
-                {editing ? (
-                    <Form.Item
-                        name={dataIndex}
-                        style={{
-                            margin: 0,
-                        }}
-                        rules={[
-                            {
-                                required: true,
-                                message: `Please Input ${title}!`,
-                            },
-                        ]}
-                    >
-                        {inputNode}
-                    </Form.Item>
-                ) : (
-                    children
-                )}
-            </td>
-        );
-    };
-
-    const [data, setData] = useState(originData);
-    const [editingKey, setEditingKey] = useState("");
-    const isEditing = (record) => record.key === editingKey;
-
-    const edit = (record) => {
-        form.setFieldsValue({
-            title: "",
-            author: "",
-            publisher: "",
-            description: "",
-            ...record,
-        });
-        setEditingKey(record.key);
-    };
-
-    const cancel = () => {
-        setEditingKey("");
-    };
-
-    const save = async (key) => {
-        try {
-            const row = await form.validateFields();
-            const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                setData(newData);
-                setEditingKey("");
-                const updatedItem = {
-                    title: row.title,
-                    author: row.author,
-                    publisher: row.publisher,
-                    description: row.description,
-                };
-                await axios.put(`/books/${key}`, updatedItem);
-            } else {
-                newData.push(row);
-                setData(newData);
-                setEditingKey("");
-            }
-        } catch (errInfo) {
-            console.log("Validate Failed:", errInfo);
-        }
-    };
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -268,6 +184,10 @@ export default function Index({ auth, books }) {
             ),
     });
 
+    const handleDelete = async (bookId) => {
+            await axios.delete(`/books/${bookId}`);
+    };
+
     const columns = [
         {
             title: "Thể loại",
@@ -289,56 +209,45 @@ export default function Index({ auth, books }) {
             title: "Tên sách",
             dataIndex: "title",
             width: "25%",
-            editable: true,
             ...getColumnSearchProps("title"),
         },
         {
             title: "Tác giả",
             dataIndex: "author",
             width: "15%",
-            editable: true,
             ...getColumnSearchProps("author"),
         },
         {
             title: "Nhà xuất bản",
             dataIndex: "publisher",
             width: "15%",
-            editable: true,
             ...getColumnSearchProps("publisher"),
         },
         {
             title: "Mô tả",
             dataIndex: "description",
-            width: "40%",
-            editable: true,
             ...getColumnSearchProps("description"),
         },
         {
             title: "Hoạt động",
             dataIndex: "operation",
-            render: (_, record) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <span>
-                        <Typography.Link
-                            onClick={() => save(record.key)}
-                            style={{
-                                marginRight: 8,
-                            }}
+            width: "10%",
+            fixed: "right",
+            render: (_, book) => {
+                return (
+                    <Space size="middle">
+                        <Link href={route("books.show", { id: book.key })}>
+                            Sửa
+                        </Link>
+                        <Popconfirm
+                            title="Are you sure you want to delete this book?"
+                            onConfirm={() => handleDelete(book.key)}
+                            okText="Yes"
+                            cancelText="No"
                         >
-                            Save
-                        </Typography.Link>
-                        <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                            <a>Cancel</a>
+                            <a href="#">Xoá</a>
                         </Popconfirm>
-                    </span>
-                ) : (
-                    <Typography.Link
-                        disabled={editingKey !== ""}
-                        onClick={() => edit(record)}
-                    >
-                        Edit
-                    </Typography.Link>
+                    </Space>
                 );
             },
         },
@@ -355,7 +264,6 @@ export default function Index({ auth, books }) {
                 inputType: col.dataIndex === "age" ? "number" : "text",
                 dataIndex: col.dataIndex,
                 title: col.title,
-                editing: isEditing(record),
             }),
         };
     });
@@ -365,18 +273,14 @@ export default function Index({ auth, books }) {
             <Head title="Users" />
             <Form form={form} component={false}>
                 <Table
-                    components={{
-                        body: {
-                            cell: EditableCell,
-                        },
-                    }}
+                    // components={{
+                    //     body: {
+                    //         cell: EditableCell,
+                    //     },
+                    // }}
                     bordered
-                    dataSource={data}
+                    dataSource={originData}
                     columns={mergedColumns}
-                    rowClassName="editable-row"
-                    pagination={{
-                        onChange: cancel,
-                    }}
                     title={() => (
                         <div className="flex justify-between items-center">
                             <div></div>

@@ -65,7 +65,6 @@ class BookController extends Controller
         ]);
 
         Book::create($validatedData);
-        // return $request;
         return redirect(route('books.index'));
     }
 
@@ -111,23 +110,22 @@ class BookController extends Controller
 
     public function getAllBook()
     {
-        $curr_user = auth()->user();
+        // $curr_user = auth()->user();
         $books = Book::with('genres')->get();
         return [
             'books' => $books,
         ];
-        // return $books;
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(Chirp $chirp): RedirectResponse
-    // {
-    //     Gate::authorize('delete', $chirp);
+    public function destroy($bookId): RedirectResponse
+    {
+        $book = Book::findOrFail($bookId);
+        
+        $book->delete();
 
-    //     $chirp->delete();
-
-    //     return redirect(route('chirps.index'));
-    // }
+        return redirect()->route('books.index');
+    }
 }
