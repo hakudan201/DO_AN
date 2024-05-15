@@ -42,21 +42,29 @@ export default function Index({ auth, books }) {
         setOpen(false);
     };
 
-    const onSubmit = () => {
-        form.validateFields()
-            .then((values) => {
-                if (selected.length !== 0) {
-                    values.genre = selected;
-                    axios.post("/books", values).catch((error) => {
-                        console.error("Error:", error);
-                    });
-                    setOpen(false);
-                }
-            })
-            .catch((errorInfo) => {
-                console.log("Validation failed:", errorInfo);
-            });
+    const onSubmit = async () => {
+        try {
+            const values = await form.validateFields();
+            const isBookExists = originData.some((book) => book.title === values.title);
+
+            if (isBookExists) {
+                form.setFields([
+                    {
+                        name: 'title',
+                        errors: ['This book title already exists. Please choose a different title.'],
+                    },
+                ]);
+            } else {
+                // Proceed with form submission
+                const selectedValues = { ...values, genre: selected };
+                await axios.post("/books", selectedValues);
+                setOpen(false);
+            }
+        } catch (errorInfo) {
+            console.log("Validation failed:", errorInfo);
+        }
     };
+
 
     const handleChange = (value) => {
         setSelected(value);
