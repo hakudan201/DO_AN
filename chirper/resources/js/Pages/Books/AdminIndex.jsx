@@ -26,6 +26,7 @@ export default function Index({ auth, books }) {
     const { TextArea } = Input;
 
     const showDrawer = async () => {
+        form.resetFields();
         axios.get("/genres").then((response) => {
             const genres = response.data;
             const res = genres.map((genre) => ({
