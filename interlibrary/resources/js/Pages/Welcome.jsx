@@ -1,11 +1,53 @@
-import { Link, Head } from '@inertiajs/react';
+import { Link, Head } from "@inertiajs/react";
+import React from "react";
+import {
+    Divider,
+    List,
+    Typography,
+    Input,
+    Carousel,
+    ConfigProvider,
+} from "antd";
+import { CaretRightOutlined } from "@ant-design/icons";
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     const handleImageError = () => {
-        document.getElementById('screenshot-container')?.classList.add('!hidden');
-        document.getElementById('docs-card')?.classList.add('!row-span-1');
-        document.getElementById('docs-card-content')?.classList.add('!flex-row');
-        document.getElementById('background')?.classList.add('!hidden');
+        document
+            .getElementById("screenshot-container")
+            ?.classList.add("!hidden");
+        document.getElementById("docs-card")?.classList.add("!row-span-1");
+        document
+            .getElementById("docs-card-content")
+            ?.classList.add("!flex-row");
+        document.getElementById("background")?.classList.add("!hidden");
+    };
+
+    const contentStyle = {
+        height: "200px",
+        // color: "#fff",
+        lineHeight: "160px",
+        width: "75%",
+        textAlign: "center",
+        align: "center",
+        backgroundImage:
+            "url('https://t4.ftcdn.net/jpg/05/44/54/69/360_F_544546950_Xi80k2ppry7rqKQQYsSNVmuaAILUiki9.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+    };
+
+    const data = [
+        "Giờ mở-đóng cửa",
+        "Video hướng dẫn sử dụng thư viện",
+        "Nội quy thư viện",
+        "Cung cấp thông tin theo yêu cầu",
+    ];
+
+    const { Search } = Input;
+    const onSearch = (value, _e, info) => console.log(info?.source, value);
+
+    const textStyle = {
+        color: "red",
     };
 
     return (
@@ -36,7 +78,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             <nav className="-mx-3 flex flex-1 justify-end">
                                 {auth.user ? (
                                     <Link
-                                        href={route('dashboard')}
+                                        href={route("dashboard")}
                                         className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                     >
                                         Dashboard
@@ -44,13 +86,13 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                 ) : (
                                     <>
                                         <Link
-                                            href={route('login')}
+                                            href={route("login")}
                                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                         >
                                             Log in
                                         </Link>
                                         <Link
-                                            href={route('register')}
+                                            href={route("register")}
                                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                                         >
                                             Register
@@ -60,9 +102,79 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             </nav>
                         </header>
 
+                        <div className="mx-auto w-full lg:w-auto flex justify-center items-center">
+                            <ConfigProvider
+                                theme={{
+                                    token: {
+                                        // Seed Token
+                                        colorPrimary: "#E72929",
+                                        borderRadius: 2,
+
+                                        // Alias Token
+                                        // colorBgContainer: ,
+                                    },
+                                }}
+                            >
+                                <Search
+                                    placeholder="input search text"
+                                    allowClear
+                                    enterButton="Search"
+                                    size="large"
+                                    onSearch={onSearch}
+                                    style={{
+                                        width: "75%",
+                                        color: "red",
+                                    }}
+                                    classNames="textStyle"
+                                />
+                            </ConfigProvider>
+                        </div>
+
                         <main className="mt-6">
-                            <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                                <a
+                            <div className="grid gap-6 lg:grid-cols-2 lg:gap-4">
+                                <div className="pl-10 mt-10">
+                                    <Carousel autoplay autoplaySpeed='60'>
+                                        <div>
+                                            <h3 style={contentStyle}></h3>
+                                        </div>
+                                        <div>
+                                            <h3 style={contentStyle}></h3>
+                                        </div>
+                                        <div>
+                                            <h3 style={contentStyle}></h3>
+                                        </div>
+                                        <div>
+                                            <h3 style={contentStyle}></h3>
+                                        </div>
+                                    </Carousel>
+                                </div>
+                                <div>
+                                    <Divider orientation="left">
+                                        Chỉ dẫn
+                                    </Divider>
+                                    <List
+                                        bordered
+                                        dataSource={data}
+                                        renderItem={(item) => (
+                                            <List.Item>
+                                                <Link>
+                                                    <CaretRightOutlined
+                                                        style={{
+                                                            fontSize: "16px",
+                                                            color: "#E72929",
+                                                        }}
+                                                    />
+                                                </Link>{" "}
+                                                {item}
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                        </main>
+                        <main className="mt-10">
+                            <div className="grid gap-6 lg:grid-cols-5 lg:gap-8">
+                                {/* <a
                                     href="https://laravel.com/docs"
                                     id="docs-card"
                                     className="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] md:row-span-3 lg:p-10 lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
@@ -133,11 +245,11 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                             />
                                         </svg>
                                     </div>
-                                </a>
+                                </a> */}
 
                                 <a
                                     href="https://laracasts.com"
-                                    className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+                                    className="flex items-start gap-4 rounded-lg bg-white px-2 py-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
                                 >
                                     <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
                                         <svg
@@ -153,35 +265,26 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                     </div>
 
                                     <div className="pt-3 sm:pt-5">
-                                        <h2 className="text-xl font-semibold text-black dark:text-white">Laracasts</h2>
+                                        <h2 className="text-xl font-semibold text-black dark:text-white">
+                                            Laracasts
+                                        </h2>
 
                                         <p className="mt-4 text-sm/relaxed">
-                                            Laracasts offers thousands of video tutorials on Laravel, PHP, and
-                                            JavaScript development. Check them out, see for yourself, and massively
-                                            level up your development skills in the process.
+                                            Laracasts offers thousands of video
+                                            tutorials on Laravel, PHP, and
+                                            JavaScript development. Check them
+                                            out, see for yourself, and massively
+                                            level up your development skills in
+                                            the process.
                                         </p>
                                     </div>
-
-                                    <svg
-                                        className="size-6 shrink-0 self-center stroke-[#FF2D20]"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="1.5"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                        />
-                                    </svg>
                                 </a>
 
                                 <a
                                     href="https://laravel-news.com"
                                     className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
                                 >
-                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
+                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-10">
                                         <svg
                                             className="size-5 sm:size-6"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -202,27 +305,83 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                         </h2>
 
                                         <p className="mt-4 text-sm/relaxed">
-                                            Laravel News is a community driven portal and newsletter aggregating all of
-                                            the latest and most important news in the Laravel ecosystem, including new
-                                            package releases and tutorials.
+                                            Laravel News is a community driven
+                                            portal and newsletter aggregating
+                                            all of the latest and most important
+                                            news in the Laravel ecosystem,
+                                            including new package releases and
+                                            tutorials.
                                         </p>
                                     </div>
-
-                                    <svg
-                                        className="size-6 shrink-0 self-center stroke-[#FF2D20]"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        strokeWidth="1.5"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                                        />
-                                    </svg>
                                 </a>
+                                <a
+                                    href="https://laravel-news.com"
+                                    className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+                                >
+                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-10">
+                                        <svg
+                                            className="size-5 sm:size-6"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <g fill="#FF2D20">
+                                                <path d="M8.75 4.5H5.5c-.69 0-1.25.56-1.25 1.25v4.75c0 .69.56 1.25 1.25 1.25h3.25c.69 0 1.25-.56 1.25-1.25V5.75c0-.69-.56-1.25-1.25-1.25Z" />
+                                                <path d="M24 10a3 3 0 0 0-3-3h-2V2.5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2V20a3.5 3.5 0 0 0 3.5 3.5h17A3.5 3.5 0 0 0 24 20V10ZM3.5 21.5A1.5 1.5 0 0 1 2 20V3a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 .5.5v17c0 .295.037.588.11.874a.5.5 0 0 1-.484.625L3.5 21.5ZM22 20a1.5 1.5 0 1 1-3 0V9.5a.5.5 0 0 1 .5-.5H21a1 1 0 0 1 1 1v10Z" />
+                                                <path d="M12.751 6.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 7.3v-.5a.75.75 0 0 1 .751-.753ZM12.751 10.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 11.3v-.5a.75.75 0 0 1 .751-.753ZM4.751 14.047h10a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-10A.75.75 0 0 1 4 15.3v-.5a.75.75 0 0 1 .751-.753ZM4.75 18.047h7.5a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-7.5A.75.75 0 0 1 4 19.3v-.5a.75.75 0 0 1 .75-.753Z" />
+                                            </g>
+                                        </svg>
+                                    </div>
 
+                                    <div className="pt-3 sm:pt-5">
+                                        <h2 className="text-xl font-semibold text-black dark:text-white">
+                                            Laravel News
+                                        </h2>
+
+                                        <p className="mt-4 text-sm/relaxed">
+                                            Laravel News is a community driven
+                                            portal and newsletter aggregating
+                                            all of the latest and most important
+                                            news in the Laravel ecosystem,
+                                            including new package releases and
+                                            tutorials.
+                                        </p>
+                                    </div>
+                                </a>
+                                <a
+                                    href="https://laravel-news.com"
+                                    className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
+                                >
+                                    <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-10">
+                                        <svg
+                                            className="size-5 sm:size-6"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <g fill="#FF2D20">
+                                                <path d="M8.75 4.5H5.5c-.69 0-1.25.56-1.25 1.25v4.75c0 .69.56 1.25 1.25 1.25h3.25c.69 0 1.25-.56 1.25-1.25V5.75c0-.69-.56-1.25-1.25-1.25Z" />
+                                                <path d="M24 10a3 3 0 0 0-3-3h-2V2.5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2V20a3.5 3.5 0 0 0 3.5 3.5h17A3.5 3.5 0 0 0 24 20V10ZM3.5 21.5A1.5 1.5 0 0 1 2 20V3a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 .5.5v17c0 .295.037.588.11.874a.5.5 0 0 1-.484.625L3.5 21.5ZM22 20a1.5 1.5 0 1 1-3 0V9.5a.5.5 0 0 1 .5-.5H21a1 1 0 0 1 1 1v10Z" />
+                                                <path d="M12.751 6.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 7.3v-.5a.75.75 0 0 1 .751-.753ZM12.751 10.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 11.3v-.5a.75.75 0 0 1 .751-.753ZM4.751 14.047h10a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-10A.75.75 0 0 1 4 15.3v-.5a.75.75 0 0 1 .751-.753ZM4.75 18.047h7.5a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-7.5A.75.75 0 0 1 4 19.3v-.5a.75.75 0 0 1 .75-.753Z" />
+                                            </g>
+                                        </svg>
+                                    </div>
+
+                                    <div className="pt-3 sm:pt-5">
+                                        <h2 className="text-xl font-semibold text-black dark:text-white">
+                                            Laravel News
+                                        </h2>
+
+                                        <p className="mt-4 text-sm/relaxed">
+                                            Laravel News is a community driven
+                                            portal and newsletter aggregating
+                                            all of the latest and most important
+                                            news in the Laravel ecosystem,
+                                            including new package releases and
+                                            tutorials.
+                                        </p>
+                                    </div>
+                                </a>
                                 <div className="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800">
                                     <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
                                         <svg
@@ -243,78 +402,81 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                                         </h2>
 
                                         <p className="mt-4 text-sm/relaxed">
-                                            Laravel's robust library of first-party tools and libraries, such as{' '}
+                                            Laravel's robust library of
+                                            first-party tools and libraries,
+                                            such as{" "}
                                             <a
                                                 href="https://forge.laravel.com"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white dark:focus-visible:ring-[#FF2D20]"
                                             >
                                                 Forge
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://vapor.laravel.com"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Vapor
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://nova.laravel.com"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Nova
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://envoyer.io"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Envoyer
                                             </a>
-                                            , and{' '}
+                                            , and{" "}
                                             <a
                                                 href="https://herd.laravel.com"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Herd
-                                            </a>{' '}
-                                            help you take your projects to the next level. Pair them with powerful open
-                                            source libraries like{' '}
+                                            </a>{" "}
+                                            help you take your projects to the
+                                            next level. Pair them with powerful
+                                            open source libraries like{" "}
                                             <a
                                                 href="https://laravel.com/docs/billing"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Cashier
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://laravel.com/docs/dusk"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Dusk
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://laravel.com/docs/broadcasting"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Echo
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://laravel.com/docs/horizon"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Horizon
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://laravel.com/docs/sanctum"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
                                             >
                                                 Sanctum
                                             </a>
-                                            ,{' '}
+                                            ,{" "}
                                             <a
                                                 href="https://laravel.com/docs/telescope"
                                                 className="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white"
@@ -329,7 +491,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         </main>
 
                         <footer className="py-16 text-center text-sm text-black dark:text-white/70">
-                            Laravel v{laravelVersion} (PHP v{phpVersion})
+                            ©{new Date().getFullYear()} thu vien HUST
                         </footer>
                     </div>
                 </div>
