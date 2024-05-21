@@ -65,5 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/getAllBook', [BookController::class, 'getAllBook']);
 });
 
+Route::GET('/searchBooks', [BookController::class, 'searchBook']);
+Route::GET('/viewBook', [BookController::class, 'viewBook']);
 
 require __DIR__ . '/auth.php';

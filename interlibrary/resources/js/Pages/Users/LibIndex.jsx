@@ -191,7 +191,7 @@ export default function LibIndex({ auth, users, lib_name }) {
             <Table
                 dataSource={dataSource}
                 columns={columns}
-                title={() => lib_name}
+                title={() => 'Thư viện ' + lib_name}
                 scroll={{
                     x: 1300,
                 }}

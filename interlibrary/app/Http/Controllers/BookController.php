@@ -120,7 +120,7 @@ class BookController extends Controller
         // //     ]);
         // // }
         // return redirect()->route('books.show', ['book' => $book->id]);
-return $request;
+        return $request;
     }
 
     public function getAllBook()
@@ -145,5 +145,27 @@ return $request;
         GenresBook::where('book_id', $book->id)->delete();
         return 'ok';
         // return redirect()->route('books.index');
+    }
+
+    public function searchBook(Request $request, Book $book)
+    {
+        $name = $request->name;
+        // $query = $request->input('query');
+        // Perform book search logic based on $query
+        $books = Book::where('title', 'like', "%$name%")->latest()->get();
+
+        return Inertia::render('SearchBook/BookList', [
+            'input' => $name,
+            'books' => $books
+        ]);
+    }
+
+    public function viewBook(Request $request, Book $book_id)
+    {
+        // return $request->id;
+        $book = Book::with('genres')->where('id', $request->id)->first();;
+        return Inertia::render('SearchBook/BookInfo', [
+            'book' => $book
+        ]);
     }
 }
