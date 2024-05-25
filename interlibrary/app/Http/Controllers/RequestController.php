@@ -16,13 +16,24 @@ class RequestController extends Controller
      */
     public function index()
     {
-        $library_id = auth()->user()->library_id;
-        $requests = BookRequest::whereHas('bookCopy', function ($query) use ($library_id) {
-            $query->where('library_id', $library_id);
-        })->with(['user:id,name,email,phone',])->with('bookcopy.book:id,title,author')->get();
-        return Inertia::render('Requests/Index', [
-            'requests' => $requests,
-        ]);
+        $curr_user = auth()->user();
+        if ($curr_user->role == 'librarian') {
+            $library_id = auth()->user()->library_id;
+            $requests = BookRequest::whereHas('bookCopy', function ($query) use ($library_id) {
+                $query->where('library_id', $library_id);
+            })->with(['user:id,name,email,phone',])->with('bookcopy.book:id,title,author')->get();
+            return Inertia::render('Requests/Index', [
+                'requests' => $requests,
+            ]);
+        } else if ($curr_user->role == 'user') {
+            $bookRequests = BookRequest::where('user_id', auth()->user()->id)->whereHas(
+                'bookCopy'
+            )->with('bookcopy.book:id,title,author')->get();
+
+            return Inertia::render('Requests/indexForUser', [
+                'requests' => $bookRequests,
+            ]);
+        }
         // return $requests;
     }
 
@@ -77,6 +88,18 @@ class RequestController extends Controller
 
         // Update the 'status' field with the new status provided
         $bookRequest->update(['status' => $validatedData['newStatus']]);
+    }
+
+    public function getRequestsOfUser($userId)
+    {
+        // Find the BookRequest instances by user_id
+        $bookRequests = BookRequest::where('user_id', $userId)->whereHas(
+            'bookCopy'
+        )->with('bookcopy.book:id,title,author')->get();
+
+        return [
+            'bookRequests' => $bookRequests
+        ];
     }
 
     /**
