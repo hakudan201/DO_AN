@@ -1,9 +1,21 @@
 import React, { useRef, useState } from "react";
-import { Flex, Layout, Typography, Image, Input, ConfigProvider } from "antd";
+import {
+    Flex,
+    Layout,
+    Typography,
+    Image,
+    Input,
+    ConfigProvider,
+    Descriptions,
+    Divider,
+    List,
+    Button,
+} from "antd";
 import { Link, Head, router } from "@inertiajs/react";
 
-export default function BookInfo({ auth, book }) {
+export default function BookInfo({ auth, book, bookcopies }) {
     console.log(book);
+    console.log(bookcopies);
 
     const { Header, Footer, Sider, Content } = Layout;
     const headerStyle = {
@@ -26,9 +38,12 @@ export default function BookInfo({ auth, book }) {
         alignItems: "right",
     };
     const contentStyle = {
-        textAlign: "center",
-        minHeight: 120,
-        lineHeight: "500px",
+        paddingTop: 20,
+        paddingLeft: 200,
+        paddingRight: 20,
+        textAlign: "left",
+        // minHeight: 120,
+        // lineHeight: "500px",
         backgroundColor: "white",
     };
     const footerStyle = {
@@ -49,6 +64,41 @@ export default function BookInfo({ auth, book }) {
     const goBack = () => {
         window.history.back(); // This will navigate back to the previous page in the history stack
     };
+
+    const items = [
+        {
+            key: "1",
+            label: "Tên sách",
+            children: book.title,
+            span: 3,
+        },
+        {
+            key: "2",
+            label: "Tên sách",
+            children: book.author,
+            span: 3,
+        },
+        {
+            key: "3",
+            label: "Mô tả",
+            children: book.description,
+            span: 3,
+        },
+        {
+            key: "4",
+            label: "Thể loại",
+            children: book.genres.map((genre) => genre.name).join(", "),
+            span: 3,
+        },
+        {
+            key: "5",
+            label: "Nhà xuất bản",
+            children: book.publisher,
+            span: 3,
+        },
+    ];
+
+    const bookCopies = Object.values(bookcopies).flatMap((library) => library);
 
     return (
         <Layout style={layoutStyle}>
@@ -96,7 +146,52 @@ export default function BookInfo({ auth, book }) {
                     <Title level={3}>{book.title}</Title>
                     <Title level={5}>{book.author}</Title>
                 </Sider>
-                <Content style={contentStyle}>Content</Content>
+                <Content style={contentStyle}>
+                    <Descriptions
+                        title="Thông tin chi tiết sách"
+                        items={items}
+                    ></Descriptions>
+                    <Divider orientation="left">Yêu cầu mượn</Divider>
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={bookCopies}
+                        renderItem={(item, index) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    title={
+                                        index === 0 ||
+                                        bookCopies[index - 1].library_name !==
+                                            item.library_name ? (
+                                            <strong>{item.library_name}</strong>
+                                        ) : null
+                                    }
+                                    description={item.location}
+                                />
+                                <div>
+                                    <p>
+                                        <strong>Năm xuất bản:</strong>{" "}
+                                        {item.year_published}
+                                    </p>
+                                    <p>
+                                        <strong>Trạng thái:</strong>{" "}
+                                        {item.status}
+                                    </p>
+                                </div>
+                                {/* Add your button here */}
+                                <Button
+                                    type="primary"
+                                    style={{
+                                        marginLeft: "100px",
+                                        marginRight: "10px",
+                                    }}
+                                    disabled={item.status !== "available"} // Enable button only when status is 'available'
+                                >
+                                    Yêu cầu mượn
+                                </Button>
+                            </List.Item>
+                        )}
+                    />
+                </Content>
             </Layout>
             {/* <Footer style={footerStyle}>Footer</Foo ter> */}
         </Layout>

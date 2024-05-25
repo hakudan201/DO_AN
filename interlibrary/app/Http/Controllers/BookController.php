@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\GenresBook;
 use App\Models\Library;
-use App\Models\User;
+use App\Models\Bookcopy;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -163,9 +165,40 @@ class BookController extends Controller
     public function viewBook(Request $request, Book $book_id)
     {
         // return $request->id;
-        $book = Book::with('genres')->where('id', $request->id)->first();;
+        $book = Book::with('genres')->where('id', $request->id)->first();
+        $bookcopies = DB::table('bookCopies')
+            ->where('book_id', $book->id)
+            ->select('library_id', 'year_published', 'location', 'id', 'status')
+            ->get();
+
+        $bookcopiesArray = $bookcopies->map(function ($item) {
+            return (array)$item;
+        });
+
+        // Group the data by library_id
+        $groupedData = [];
+        foreach ($bookcopiesArray as $item) {
+            $libraryId = $item['library_id'];
+
+            // Retrieve library name
+            $library = Library::findOrFail($libraryId);
+            $libraryName = $library->name;
+
+            // Append library name to the item
+            $item['library_name'] = $libraryName;
+            $name = $item['library_name'];
+
+            // Group the data by library_id
+            if (!isset($groupedData[$name])) {
+                $groupedData[$name] = [];
+            }
+            $groupedData[$name][] = $item;
+        }
+        // return $groupedData;
+
         return Inertia::render('SearchBook/BookInfo', [
-            'book' => $book
+            'book' => $book,
+            'bookcopies' => $groupedData
         ]);
     }
 }
