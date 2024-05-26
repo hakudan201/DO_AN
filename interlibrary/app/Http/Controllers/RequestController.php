@@ -48,16 +48,17 @@ class RequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(Request $request): RedirectResponse
-    // {
-    //     $validated = $request->validate([
-    //         'message' => 'required|string|max:255',
-    //     ]);
+    public function store(Request $request)
+    {
+        return 'ok';
+        // $validated = $request->validate([
+        //     'message' => 'required|string|max:255',
+        // ]);
 
-    //     $request->user()->chirps()->create($validated);
+        // $request->user()->chirps()->create($validated);
 
-    //     return redirect(route('chirps.index'));
-    // }
+        // return redirect(route('chirps.index'));
+    }
 
     /**
      * Display the specified resource.

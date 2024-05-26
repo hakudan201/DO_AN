@@ -178,16 +178,22 @@ export default function BookInfo({ auth, book, bookcopies }) {
                                     </p>
                                 </div>
                                 {/* Add your button here */}
-                                <Button
-                                    type="primary"
-                                    style={{
-                                        marginLeft: "100px",
-                                        marginRight: "10px",
-                                    }}
-                                    disabled={item.status !== "available"} // Enable button only when status is 'available'
+                                <Link
+                                    href={route("requests.store", {
+                                        id: item.key,
+                                    })}
                                 >
-                                    Yêu cầu mượn
-                                </Button>
+                                    <Button
+                                        type="primary"
+                                        style={{
+                                            marginLeft: "100px",
+                                            marginRight: "10px",
+                                        }}
+                                        disabled={item.status !== "Available"} // Enable button only when status is 'available'
+                                    >
+                                        Yêu cầu mượn
+                                    </Button>
+                                </Link>
                             </List.Item>
                         )}
                     />
