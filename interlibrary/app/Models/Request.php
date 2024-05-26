@@ -16,7 +16,7 @@ class Request extends Model
     protected $fillable = [
         'id',
         'user_id',
-        'book_id',
+        'bookcopy_id',
         'borrow_date',
         'checkout_date',
         'due_date',

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bookcopy;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -50,14 +51,27 @@ class RequestController extends Controller
      */
     public function store(Request $request)
     {
-        return 'ok';
-        // $validated = $request->validate([
-        //     'message' => 'required|string|max:255',
-        // ]);
+        $curr_user = auth()->user();
+        $currentDateTime = now();
 
-        // $request->user()->chirps()->create($validated);
+        $request->merge([
+            'user_id' => $curr_user->id,
+            'borrow_date' => $currentDateTime,
+            'status' => 'pending'
+        ]);
 
-        // return redirect(route('chirps.index'));
+
+
+        $validated = $request->validate([
+            'bookcopy_id' => 'required',
+            'user_id' => 'required',
+            'borrow_date' => 'required',
+            'status' => 'required'
+        ]);
+
+        BookRequest::create($validated);
+        Bookcopy::where('id', $request->bookcopy_id)->update(['status' => 'Reserved']);
+
     }
 
     /**

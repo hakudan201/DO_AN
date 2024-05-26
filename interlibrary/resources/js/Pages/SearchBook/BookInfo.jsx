@@ -13,7 +13,7 @@ import {
 } from "antd";
 import { Link, Head, router } from "@inertiajs/react";
 
-export default function BookInfo({ auth, book, bookcopies }) {
+export default function BookInfo({ auth, book, bookcopies, user }) {
     console.log(book);
     console.log(bookcopies);
 
@@ -182,6 +182,10 @@ export default function BookInfo({ auth, book, bookcopies }) {
                                     href={route("requests.store", {
                                         id: item.key,
                                     })}
+                                    method="post"
+                                    data={{ bookcopy_id: item.id,
+                                        // library_id: item.library_id,
+                                     }}
                                 >
                                     <Button
                                         type="primary"
