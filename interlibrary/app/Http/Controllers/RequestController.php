@@ -29,7 +29,7 @@ class RequestController extends Controller
         } else if ($curr_user->role == 'member') {
             $bookRequests = BookRequest::where('user_id', auth()->user()->id)->whereHas(
                 'bookCopy'
-            )->with('bookcopy.book:id,title,author')->get();
+            )->with(['bookcopy.book:id,title', 'lendLib:id,name',])->get();
 
             return Inertia::render('Requests/indexForUser', [
                 'requests' => $bookRequests,
@@ -76,7 +76,6 @@ class RequestController extends Controller
 
         BookRequest::create($validated);
         Bookcopy::where('id', $request->bookcopy_id)->update(['status' => 'Reserved']);
-
     }
 
     /**
@@ -110,17 +109,21 @@ class RequestController extends Controller
         $bookRequest->update(['status' => $validatedData['newStatus']]);
     }
 
-    public function getRequestsOfUser($userId)
-    {
-        // Find the BookRequest instances by user_id
-        $bookRequests = BookRequest::where('user_id', $userId)->whereHas(
-            'bookCopy'
-        )->with('bookcopy.book:id,title,author')->get();
-
-        return [
-            'bookRequests' => $bookRequests
-        ];
-    }
+    // public function getRequestsOfUser($userId)
+    // {
+    //     // Find the BookRequest instances by user_id
+    //     $bookRequests = BookRequest::where('user_id', $userId)->whereHas(
+    //         'bookCopy'
+    //     )->with([
+    //         'lendLib:id,name,phone',
+    //         'bookcopy.book:id,title,author'
+    //     ])->get();
+    //     // dd($bookRequests);
+    //     return 'ok';
+    //     // return [
+    //     //     'bookRequests' => $bookRequests
+    //     // ];
+    // }
 
     /**
      * Show the form for editing the specified resource.

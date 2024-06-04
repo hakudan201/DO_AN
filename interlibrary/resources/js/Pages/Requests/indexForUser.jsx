@@ -13,13 +13,24 @@ export default function IndexForUser({ auth, requests }) {
         due_date: data.due_date,
         return_date: data.return_date,
         status: data.status,
+        lend_type: data.lend_type === 'normal' ? 'thông thường' : 'liên thư viện',
+        lend_lib: data.lend_lib.name
     }));
+    console.log(requests);
 
     // Define the columns for the table
     const columns = [
         {
             title: "Tên sách",
             dataIndex: "book_title",
+        },
+        {
+            title: "Loại mượn",
+            dataIndex: "lend_type",
+        },
+        {
+            title: "Thư viện cho mượn",
+            dataIndex: "lend_lib",
         },
         {
             title: "Ngày mượn",

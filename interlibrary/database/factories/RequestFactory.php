@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Library;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Request>
@@ -20,9 +21,15 @@ class RequestFactory extends Factory
      */
     public function definition(): array
     {
-        $userId = User::where('role', 'member')->inRandomOrder()->first()->id; // Sửa điều kiện lấy UserID
+        $user = User::where('role', 'member')->inRandomOrder()->first();
+
+        // Get the library_id of the selected user
+        $borrowLibId = $user->library_id;
+
+        // Define the other variables
+        $userId = $user->id; // Sửa điều kiện lấy UserID
         $bookcopyId = Bookcopy::inRandomOrder()->first()->id;
-        $borrowLibId = Library::inRandomOrder()->first()->id; // Randomly select a library ID for borrow_lib
+        // $borrowLibId = $libraryId;// Randomly select a library ID for borrow_lib
         $lendLibId = Library::inRandomOrder()->first()->id; // Randomly select a library ID for lend_lib
         $lendType = $borrowLibId === $lendLibId ? 'normal' : 'interlib';
         $statuses = ['pending', 'denied', 'ready', 'canceled', 'active', 'completed'];

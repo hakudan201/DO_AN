@@ -36,4 +36,10 @@ class Request extends Model
     {
         return $this->belongsTo(Bookcopy::class, 'bookcopy_id'); // Mối quan hệ belongsTo với mô hình Book
     }
+
+    public function lendLib()
+    {
+        return $this->belongsTo(Library::class, 'lend_lib');
+    }
+
 }
