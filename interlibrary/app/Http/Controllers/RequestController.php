@@ -26,7 +26,7 @@ class RequestController extends Controller
             return Inertia::render('Requests/Index', [
                 'requests' => $requests,
             ]);
-        } else if ($curr_user->role == 'user') {
+        } else if ($curr_user->role == 'member') {
             $bookRequests = BookRequest::where('user_id', auth()->user()->id)->whereHas(
                 'bookCopy'
             )->with('bookcopy.book:id,title,author')->get();
@@ -53,20 +53,25 @@ class RequestController extends Controller
     {
         $curr_user = auth()->user();
         $currentDateTime = now();
-
         $request->merge([
             'user_id' => $curr_user->id,
+            'borrow_lib' => $curr_user->library_id,
             'borrow_date' => $currentDateTime,
+            'lend_type' => ($curr_user->library_id == $request->input('lend_lib')) ? 'normal' : 'interlib',
             'status' => 'pending'
         ]);
 
+        // return $request;
 
 
         $validated = $request->validate([
             'bookcopy_id' => 'required',
             'user_id' => 'required',
             'borrow_date' => 'required',
-            'status' => 'required'
+            'status' => 'required',
+            'borrow_lib' => 'required',
+            'lend_lib' => 'required',
+            'lend_type' => 'required',
         ]);
 
         BookRequest::create($validated);

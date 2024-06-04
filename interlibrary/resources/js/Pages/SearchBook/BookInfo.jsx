@@ -12,6 +12,8 @@ import {
     Button,
 } from "antd";
 import { Link, Head, router } from "@inertiajs/react";
+import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+
 
 export default function BookInfo({ auth, book, bookcopies, user }) {
     console.log(book);
@@ -29,10 +31,9 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
     const siderStyle = {
         paddingTop: 20,
         textAlign: "center",
-        textAlign: "center",
         lineHeight: "120px",
         paddingInline: 48,
-        lineHeight: "64px",
+        // lineHeight: "64px",
         backgroundColor: "white",
         display: "flex",
         alignItems: "right",
@@ -105,12 +106,20 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
             <Header style={headerStyle}>
                 <nav className="-mx-3 flex flex-1 justify-between items-center">
                     {auth.user ? (
-                        <Link
+                        <>
+                        <div>
+                        <button onClick={goBack}>Quay lại</button>
+                    </div>
+                        {/* <Link
                             href={route("dashboard")}
                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                         >
                             Dashboard
-                        </Link>
+                        </Link> */}
+                        <Link method="post" href={route('logout')}>
+                                Đăng xuất
+                            </Link>
+                    </>
                     ) : (
                         <>
                             <div>
@@ -184,7 +193,7 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
                                     })}
                                     method="post"
                                     data={{ bookcopy_id: item.id,
-                                        // library_id: item.library_id,
+                                        lend_lib: item.library_id,
                                      }}
                                 >
                                     <Button
@@ -203,7 +212,7 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
                     />
                 </Content>
             </Layout>
-            {/* <Footer style={footerStyle}>Footer</Foo ter> */}
+            {/* <Footer style={footerStyle}>Footer</Footer> */}
         </Layout>
     );
 }

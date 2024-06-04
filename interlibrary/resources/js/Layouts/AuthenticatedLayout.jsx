@@ -42,7 +42,7 @@ export default function Authenticated({ user, header, children }) {
                                         Thư viện
                                     </NavLink>
                                 )}
-                                {(user.role === 'librarian'||(user.role === 'user')) && (
+                                {(user.role === 'librarian'||(user.role === 'member')) && (
                                     <NavLink href={route('requests.index')} active={route().current('requests.index')}>
                                         Yêu cầu
                                     </NavLink>
@@ -78,9 +78,9 @@ export default function Authenticated({ user, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
+                                        <Dropdown.Link href={route('profile.edit')}>Cá nhân</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
-                                            Log Out
+                                            Đăng xuất
                                         </Dropdown.Link>
                                     </Dropdown.Content>
                                 </Dropdown>

@@ -21,7 +21,10 @@ class Request extends Model
         'checkout_date',
         'due_date',
         'return_date',
-        'status'
+        'status',
+        'lend_type',
+        'borrow_lib',
+        'lend_lib'
     ];
 
     public function user()
