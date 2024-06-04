@@ -19,6 +19,9 @@ return new class extends Migration
             $table->date('checkout_date')->nullable(); // Sửa checkout_date thành kiểu dữ liệu date
             $table->date('due_date')->nullable(); // Sửa due_date thành kiểu dữ liệu date
             $table->date('return_date')->nullable(); // Sửa return_date thành kiểu dữ liệu date và cho phép giá trị null
+            $table->foreignId('borrow_lib')->constrained('libraries')->nullable();
+            $table->foreignId('lend_lib')->constrained('libraries')->nullable();
+            $table->enum('lend_type', ['normal', 'interlib']);
             $table->enum('status', ['pending', 'denied', 'ready', 'canceled', 'active', 'completed']);
             $table->timestamps();
         });

@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'DOB' => $this->faker->date('Y-m-d'), // Generate a random date of birth
             'address' => $this->faker->address(), // Generate a fake address
             'phone' => '0' . $this->faker->numerify('#########'),
-            'role' => $this->faker->randomElement(['user', 'librarian']), // Random role
+            'role' => $this->faker->randomElement(['member', 'librarian']), // Random role
             'library_id' => $this->faker->numberBetween(1, 10), // Random library ID
             'due_membership' => $this->faker->date('Y-m-d', '+1 year') // Membership due date
         ];

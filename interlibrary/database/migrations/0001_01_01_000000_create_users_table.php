@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('DOB');
             $table->string('address');
             $table->string('phone');
-            $table->enum('role', ['user', 'librarian', 'admin'])->default('user');
+            $table->enum('role', ['member', 'librarian', 'admin'])->default('member');
             $table->date('due_membership');
             $table->rememberToken();
             $table->timestamps();

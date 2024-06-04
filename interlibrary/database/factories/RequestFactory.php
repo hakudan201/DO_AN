@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Bookcopy;
 use App\Models\User;
+use App\Models\Library;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
 
@@ -19,8 +20,11 @@ class RequestFactory extends Factory
      */
     public function definition(): array
     {
-        $userId = User::where('role', 1)->inRandomOrder()->first()->id; // Sửa điều kiện lấy UserID
+        $userId = User::where('role', 'member')->inRandomOrder()->first()->id; // Sửa điều kiện lấy UserID
         $bookcopyId = Bookcopy::inRandomOrder()->first()->id;
+        $borrowLibId = Library::inRandomOrder()->first()->id; // Randomly select a library ID for borrow_lib
+        $lendLibId = Library::inRandomOrder()->first()->id; // Randomly select a library ID for lend_lib
+        $lendType = $borrowLibId === $lendLibId ? 'normal' : 'interlib';
         $statuses = ['pending', 'denied', 'ready', 'canceled', 'active', 'completed'];
         $status = $this->faker->randomElement($statuses);
 
@@ -44,10 +48,13 @@ class RequestFactory extends Factory
         return [
             'user_id' => $userId,
             'bookcopy_id' => $bookcopyId,
+            'borrow_lib' => $borrowLibId,
+            'lend_lib' => $lendLibId,
             'borrow_date' => $borrowDate,
             'checkout_date' => $checkoutDate,
             'due_date' => $dueDate,
             'return_date' => $returnDate,
+            'lend_type' => $lendType,
             'status' => $status,
         ];
     }
