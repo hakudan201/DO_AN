@@ -146,7 +146,7 @@ export default function Index({ auth, books, lib_name }) {
                 columns={columns}
                 title={() => (
                     <div className="flex justify-between items-center">
-                        <h3>Thư viện {lib_name}</h3>{" "}
+                        <p>{lib_name}</p>{" "}
                         <Button
                             onClick={showDrawer}
                             type="primary"
@@ -154,14 +154,14 @@ export default function Index({ auth, books, lib_name }) {
                                 marginBottom: 16,
                             }}
                         >
-                            Add a row
+                            Thêm bản sách
                         </Button>
                     </div>
                 )}
             />
 
             <Drawer
-                title="Create a new account"
+                title="Tạo 1 bản sách mới"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -172,9 +172,9 @@ export default function Index({ auth, books, lib_name }) {
                 }}
                 extra={
                     <Space>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={onClose}>Huỷ</Button>
                         <Button onClick={onSubmit} type="primary">
-                            Submit
+                            Gửi
                         </Button>
                     </Space>
                 }

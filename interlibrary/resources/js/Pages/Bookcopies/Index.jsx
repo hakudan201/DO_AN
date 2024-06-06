@@ -112,32 +112,32 @@ export default function Index({ auth, bookcopies, book }) {
         editable: true,
       },
       {
-        title: 'So trang',
+        title: 'Số trang',
         dataIndex: 'numOfPages',
         editable: true,
       },
       {
-        title: 'Nam xuat ban',
+        title: 'Năm xuất bản',
         dataIndex: 'year_published',
         editable: true,
       },
       {
-        title: 'Dang sach',
+        title: 'Dạng sách',
         dataIndex: 'format',
         editable: true,
       },
       {
-        title: 'Gia tien',
+        title: 'Giá tiền',
         dataIndex: 'price',
         editable: true,
       },
       {
-        title: 'Tinh trang',
+        title: 'Tình trạng',
         dataIndex: 'status',
         editable: true,
       },
       {
-        title: 'Vi tri',
+        title: 'Vị trí',
         dataIndex: 'location',
         editable: true,
       },
@@ -154,15 +154,15 @@ export default function Index({ auth, bookcopies, book }) {
                   marginRight: 8,
                 }}
               >
-                Save
+                Lưu
               </Typography.Link>
-              <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                <a>Cancel</a>
+              <Popconfirm title="Bạn chắc chắn huỷ chứ?" onConfirm={cancel}>
+                <a>Huỷ</a>
               </Popconfirm>
             </span>
           ) : (
             <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-              Edit
+              Sửa
             </Typography.Link>
           );
         },

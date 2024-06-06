@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('borrow_lib')->constrained('libraries')->nullable();
             $table->foreignId('lend_lib')->constrained('libraries')->nullable();
             $table->enum('lend_type', ['normal', 'interlib']);
-            $table->enum('status', ['pending', 'denied', 'ready', 'canceled', 'active', 'completed']);
+            $table->enum('status', ['pending', 'denied', 'awaiting', 'dispatched', 'ready', 'canceled', 'active', 'completed']);
             $table->timestamps();
         });
     }

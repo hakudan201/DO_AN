@@ -42,4 +42,9 @@ class Request extends Model
         return $this->belongsTo(Library::class, 'lend_lib');
     }
 
+    public function borrowLib()
+    {
+        return $this->belongsTo(Library::class, 'borrow_lib');
+    }
+
 }

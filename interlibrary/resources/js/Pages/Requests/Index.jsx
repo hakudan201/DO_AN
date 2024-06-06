@@ -3,7 +3,7 @@ import { Table, Button } from "antd";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 
-export default function Index({ auth, requests }) {
+export default function Index({ auth, requests, lib_name }) {
     const columns = [
         {
             title: "Người mượn",
@@ -166,6 +166,7 @@ export default function Index({ auth, requests }) {
                 columns={columns}
                 dataSource={data}
                 onChange={onChange}
+                title={() =>  lib_name}
                 showSorterTooltip={{
                     target: "sorter-icon",
                 }}

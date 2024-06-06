@@ -4,12 +4,14 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage, Link } from "@inertiajs/react";
 import axios from "axios";
 
-export default function RequestInformation({
+export default function BorrowInformation({
     auth,
     book,
     bookcopy,
     user,
     request,
+    borrow_lib,
+    lend_lib,
 }) {
     const items = [
         {
@@ -44,12 +46,46 @@ export default function RequestInformation({
         },
         {
             key: "7",
-            label: "Trạng thái",
-            span: 3,
-            children: <Badge status="default" text={request.status} />,
+            label: "Thư viện mượn",
+            children: borrow_lib,
         },
         {
             key: "8",
+            label: "Thư viện cho mượn",
+            children: lend_lib,
+            span: 2,
+        },
+        {
+            key: "9",
+            label: "Trạng thái",
+            span: 3,
+            children: (
+                <Badge
+                    status="default"
+                    text={
+                        request.status === "pending"
+                            ? "Đang chờ"
+                            : request.status === "denied"
+                            ? "Bị từ chối"
+                            : request.status === "awaiting"
+                            ? "Chờ xác nhận"
+                            : request.status === "canceled"
+                            ? "Bị huỷ"
+                            : request.status === "dispatched"
+                            ? "Đang chuyển"
+                            : request.status === "ready"
+                            ? "Sẵn sàng"
+                            : request.status === "active"
+                            ? "Đang mượn"
+                            : request.status === "completed"
+                            ? "Đã hoàn thành"
+                            : request.status
+                    }
+                />
+            ),
+        },
+        {
+            key: "10",
             label: "Ngày mượn sách",
             children: request.borrow_date,
         },
@@ -59,38 +95,16 @@ export default function RequestInformation({
             children: request.checkout_date,
             span: 2,
         },
-        request.due_date &&
-            request.return_date && {
-                key: "10",
-                label: "Hạn trả sách",
-                children: request.due_date,
-            },
-        request.due_date &&
-            request.return_date && {
-                key: "11",
-                label: "Ngày trả sách",
-                children: request.return_date,
-            },
-        // {
-        //     key: "11",
-        //     label: "Config Info",
-        //     children: (
-        //         <>
-        //             Data disk type: MongoDB
-        //             <br />
-        //             Database version: 3.4
-        //             <br />
-        //             Package: dds.mongo.mid
-        //             <br />
-        //             Storage space: 10 GB
-        //             <br />
-        //             Replication factor: 3
-        //             <br />
-        //             Region: East China 1
-        //             <br />
-        //         </>
-        //     ),
-        // },
+        request.due_date && {
+            key: "10",
+            label: "Hạn trả sách",
+            children: request.due_date,
+        },
+        request.return_date && {
+            key: "11",
+            label: "Ngày trả sách",
+            children: request.return_date,
+        },
     ].filter(Boolean);
 
     const handleAcceptClick = async () => {
@@ -98,6 +112,22 @@ export default function RequestInformation({
             const response = await axios.post("/requests/updateStatus", {
                 id: request.id,
                 newStatus: "ready",
+            });
+            window.location.reload();
+
+            console.log("Status updated successfully:", response.data);
+            // Optionally, perform any additional actions upon successful update
+        } catch (error) {
+            console.error("Error updating status:", error);
+            // Optionally, handle errors or display error messages to the user
+        }
+    };
+
+    const handleRequestInterlibClick = async () => {
+        try {
+            const response = await axios.post("/requests/updateStatus", {
+                id: request.id,
+                newStatus: "denied",
             });
             window.location.reload();
 
@@ -181,13 +211,25 @@ export default function RequestInformation({
             <div style={{ marginTop: "20px", textAlign: "right" }}>
                 <Button
                     type="primary"
+                    onClick={handleRequestInterlibClick}
+                    style={{ marginRight: "10px" }}
+                >
+                    Gửi yêu cầu liên thư viện
+                </Button>
+                <Button type="primary" onClick={handleDenyClick} danger>
+                    Từ chối
+                </Button>
+            </div>
+        );
+    } else if (request.status === "dispatched") {
+        buttonSet = (
+            <div style={{ marginTop: "20px", textAlign: "right" }}>
+                <Button
+                    type="primary"
                     onClick={handleAcceptClick}
                     style={{ marginRight: "10px" }}
                 >
-                    Accept
-                </Button>
-                <Button type="primary" onClick={handleDenyClick} danger>
-                    Deny
+                    Xác nhận nhận sách
                 </Button>
             </div>
         );
@@ -199,10 +241,10 @@ export default function RequestInformation({
                     onClick={handleCheckoutClick}
                     style={{ marginRight: "10px" }}
                 >
-                    Checkout
+                    Xác nhận lấy sách
                 </Button>
                 <Button type="primary" onClick={handleCancelClick} danger>
-                    Cancel
+                    Huỷ
                 </Button>
             </div>
         );
@@ -214,7 +256,7 @@ export default function RequestInformation({
                     onClick={handleReturnClick}
                     style={{ marginRight: "10px" }}
                 >
-                    Return
+                    Xác nhận trả sách
                 </Button>
             </div>
         );
@@ -227,12 +269,12 @@ export default function RequestInformation({
                 <Col xs={24} sm={20} md={100} lg={100} xl={100}>
                     {/* Control the width with Col */}
                     <Descriptions
-                        title="Request Information"
+                        title="Thông tin phiếu mượn liên thư viện"
                         layout="vertical"
                         bordered
                         items={items}
                         extra={
-                            <Link href={route('requests.index')}>
+                            <Link href={route("requests.interlibIndex")}>
                                 <Button type="primary">Quay lại</Button>
                             </Link>
                         }

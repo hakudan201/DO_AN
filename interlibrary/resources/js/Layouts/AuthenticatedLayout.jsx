@@ -44,7 +44,12 @@ export default function Authenticated({ user, header, children }) {
                                 )}
                                 {(user.role === 'librarian'||(user.role === 'member')) && (
                                     <NavLink href={route('requests.index')} active={route().current('requests.index')}>
-                                        Yêu cầu
+                                        Phiếu mượn
+                                    </NavLink>
+                                )}
+                                {(user.role === 'librarian') && (
+                                    <NavLink href={route('requests.interlibIndex')} active={route().current('requests.interlibIndex')}>
+                                        Phiếu mượn liên thư viện
                                     </NavLink>
                                 )}
                             </div>

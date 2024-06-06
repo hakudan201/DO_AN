@@ -49,7 +49,7 @@ class RequestFactory extends Factory
 
         $dueDate = null;
         if ($checkoutDate !== null) {
-            $dueDate = Carbon::parse($checkoutDate)->addDays(30)->format('Y-m-d');
+            $dueDate = Carbon::parse($checkoutDate)->addDays(14)->format('Y-m-d');
         }
 
         return [

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookcopy;
+use App\Models\Library;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,11 +22,17 @@ class RequestController extends Controller
         $curr_user = auth()->user();
         if ($curr_user->role == 'librarian') {
             $library_id = auth()->user()->library_id;
-            $requests = BookRequest::whereHas('bookCopy', function ($query) use ($library_id) {
+            $requests = BookRequest::where('lend_type', 'normal')->whereHas('bookCopy', function ($query) use ($library_id) {
                 $query->where('library_id', $library_id);
             })->with(['user:id,name,email,phone',])->with('bookcopy.book:id,title,author')->get();
+            $lib_name = User::with('library')
+                ->where('library_id', $library_id)
+                ->where('id', auth()->user()->id)
+                ->latest()
+                ->first();
             return Inertia::render('Requests/Index', [
                 'requests' => $requests,
+                'lib_name' => $lib_name->library->name
             ]);
         } else if ($curr_user->role == 'member') {
             $bookRequests = BookRequest::where('user_id', auth()->user()->id)->whereHas(
@@ -36,6 +44,27 @@ class RequestController extends Controller
             ]);
         }
         // return $requests;
+    }
+
+    public function interlibIndex()
+    {
+        $library_id = auth()->user()->library_id;
+        $lend_requests = BookRequest::where('lend_type', 'interlib')
+            ->where('lend_lib', $library_id)
+            ->with(['user:id,name,email,phone,library_id', 'lendLib:id,name', 'borrowLib:id,name', 'bookcopy.book:id,title,author'])->get();
+        $borrow_requests = BookRequest::where('lend_type', 'interlib')
+            ->where('borrow_lib', $library_id)
+            ->with(['user:id,name,email,phone,library_id', 'lendLib:id,name', 'borrowLib:id,name', 'bookcopy.book:id,title,author'])->get();
+        $requests = $lend_requests->merge($borrow_requests);
+        $lib_name = User::with('library')
+            ->where('library_id', $library_id)
+            ->where('id', auth()->user()->id)
+            ->latest()
+            ->first();
+        return Inertia::render('Requests/InterlibIndex', [
+            'requests' => $requests,
+            'lib_name' => $lib_name->library->name
+        ]);
     }
 
     /**
@@ -87,7 +116,7 @@ class RequestController extends Controller
         $bookcopy = $request->bookcopy;
         $user = $request->user;
         $request = BookRequest::find($request->request_id);
-        return Inertia::render('Requests/RequestInformation', [
+        return Inertia::render('Requests/NormalRequestInformation', [
             'book' => $book,
             'bookcopy' => $bookcopy,
             'user' => $user,
@@ -95,8 +124,40 @@ class RequestController extends Controller
         ]);
     }
 
+    public function interlibShow(Request $request)
+    {
+        $curr_user_id = auth()->user()->library_id;
+        $book = $request->book;
+        $bookcopy = $request->bookcopy;
+        $user = $request->user;
+        $borrow_lib_name = $request->borrow_lib;
+        $lend_lib_name = $request->lend_lib;
+        $request = BookRequest::find($request->request_id);
+        $borrow_lib = $request->borrow_lib;
+
+        if ($borrow_lib == $curr_user_id) {
+            return Inertia::render('Requests/BorrowInformation', [
+                'book' => $book,
+                'bookcopy' => $bookcopy,
+                'user' => $user,
+                'request' => $request,
+                'borrow_lib' => $borrow_lib_name,
+                'lend_lib' => $lend_lib_name
+            ]);
+        } else {
+            return Inertia::render('Requests/LendInformation', [
+                'book' => $book,
+                'bookcopy' => $bookcopy,
+                'request' => $request,
+                'borrow_lib' => $borrow_lib_name,
+                'lend_lib' => $lend_lib_name
+            ]);
+        }
+    }
+
     public function updateStatus(Request $request)
     {
+        // Validate incoming request data
         $validatedData = $request->validate([
             'id' => 'required|exists:requests,id', // Validate that 'id' exists in 'book_requests' table
             'newStatus' => 'required|string', // Validate 'newStatus' as a required string
@@ -105,9 +166,26 @@ class RequestController extends Controller
         // Find the BookRequest instance by ID
         $bookRequest = BookRequest::findOrFail($validatedData['id']);
 
+        // Check if the new status is 'active'
+        if ($validatedData['newStatus'] === 'active') {
+            // Set checkout_date to now and due_date to 14 days from now
+            $bookRequest->checkout_date = now();
+            $bookRequest->due_date = now()->addDays(14);
+        }
+
+        // Check if the new status is 'completed'
+        if ($validatedData['newStatus'] === 'completed') {
+            // Set return_date to now
+            $bookRequest->return_date = now();
+        }
+
         // Update the 'status' field with the new status provided
-        $bookRequest->update(['status' => $validatedData['newStatus']]);
+        $bookRequest->status = $validatedData['newStatus'];
+
+        // Save the changes to the database
+        $bookRequest->save();
     }
+
 
     // public function getRequestsOfUser($userId)
     // {

@@ -39,7 +39,7 @@ export default function UpdateUserInformationForm({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    User Information
+                    Thông tin người dùng
                 </h2>
 
                 {/* <p className="mt-1 text-sm text-gray-600">
@@ -49,7 +49,7 @@ export default function UpdateUserInformationForm({
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="name" value="Name" />
+                    <InputLabel htmlFor="name" value="Tên" />
 
                     <TextInput
                         id="name"
@@ -79,7 +79,7 @@ export default function UpdateUserInformationForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="DOB" value="Date of Birth" />
+                    <InputLabel htmlFor="DOB" value="Ngày sinh" />
                     <TextInput
                         id="DOB"
                         type="date"
@@ -91,7 +91,7 @@ export default function UpdateUserInformationForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="address" value="Address" />
+                    <InputLabel htmlFor="address" value="Địa chỉ" />
 
                     <TextInput
                         id="address"
@@ -107,7 +107,7 @@ export default function UpdateUserInformationForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="phone" value="phone" />
+                    <InputLabel htmlFor="phone" value="Số điện thoại" />
 
                     <TextInput
                         id="phone"
@@ -126,7 +126,7 @@ export default function UpdateUserInformationForm({
                     <div>
                         <InputLabel
                             htmlFor="due_membership"
-                            value="Due Membership"
+                            value="Hạn thành viên"
                         />
                         <TextInput
                             id="due_membership"
@@ -143,7 +143,7 @@ export default function UpdateUserInformationForm({
 
                 {auth_role === "admin" && (
                     <div>
-                        <InputLabel htmlFor="role" value="Role" />
+                        <InputLabel htmlFor="role" value="Quyền" />
                         <Select
                             id="role"
                             className="mt-1 block w-full"
@@ -152,9 +152,11 @@ export default function UpdateUserInformationForm({
                             required
                         >
                             <Select.Option value="librarian">
-                                Librarian
+                                Thủ thư
                             </Select.Option>
-                            <Select.Option value="user">User</Select.Option>
+                            <Select.Option value="member">
+                                Thành viên
+                            </Select.Option>
                         </Select>
                         <InputError className="mt-2" message={errors.role} />
                     </div>
@@ -183,7 +185,7 @@ export default function UpdateUserInformationForm({
                 )} */}
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Lưu</PrimaryButton>
 
                     <Transition
                         show={recentlySuccessful}
@@ -192,7 +194,7 @@ export default function UpdateUserInformationForm({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">Saved.</p>
+                        <p className="text-sm text-gray-600">Đã lưu.</p>
                     </Transition>
                 </div>
             </form>

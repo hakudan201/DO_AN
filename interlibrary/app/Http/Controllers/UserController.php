@@ -21,7 +21,7 @@ class UserController extends Controller
         if ($curr_user->role == 'librarian') {
             $users = User::where('id', '!=', $curr_user->id)
                 ->where('library_id', $curr_user->library_id)
-                ->where('role', 'user')
+                ->where('role', 'member')
                 ->latest()
                 ->get();
             $lib_name = User::with('library')

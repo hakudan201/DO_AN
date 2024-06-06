@@ -65,6 +65,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/getAllBook', [BookController::class, 'getAllBook']);
 });
 
+Route::GET('requests//interlibIndex', [RequestController::class, 'interlibIndex'])->middleware(['auth', 'verified'])->name('requests.interlibIndex');
+Route::GET('requests//interlibShow', [RequestController::class, 'interlibShow'])->middleware(['auth', 'verified'])->name('requests.interlibShow');
 Route::GET('/searchBooks', [BookController::class, 'searchBook']);
 Route::GET('/viewBook', [BookController::class, 'viewBook']);
 
