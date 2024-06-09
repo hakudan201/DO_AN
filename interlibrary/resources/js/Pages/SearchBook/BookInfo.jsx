@@ -75,7 +75,7 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
         },
         {
             key: "2",
-            label: "Tên sách",
+            label: "Tác giả",
             children: book.author,
             span: 3,
         },
