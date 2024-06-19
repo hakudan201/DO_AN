@@ -181,10 +181,10 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
                                         <strong>Năm xuất bản:</strong>{" "}
                                         {item.year_published}
                                     </p>
-                                    <p>
+                                    {/* <p>
                                         <strong>Trạng thái:</strong>{" "}
                                         {item.status}
-                                    </p>
+                                    </p> */}
                                 </div>
                                 {/* Add your button here */}
                                 <Link
