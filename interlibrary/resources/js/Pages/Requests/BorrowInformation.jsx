@@ -127,7 +127,7 @@ export default function BorrowInformation({
         try {
             const response = await axios.post("/requests/updateStatus", {
                 id: request.id,
-                newStatus: "denied",
+                newStatus: "awaiting",
             });
             window.location.reload();
 

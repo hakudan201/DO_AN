@@ -163,20 +163,27 @@ class RequestController extends Controller
             'newStatus' => 'required|string', // Validate 'newStatus' as a required string
         ]);
 
+
         // Find the BookRequest instance by ID
         $bookRequest = BookRequest::findOrFail($validatedData['id']);
-
         // Check if the new status is 'active'
         if ($validatedData['newStatus'] === 'active') {
             // Set checkout_date to now and due_date to 14 days from now
             $bookRequest->checkout_date = now();
             $bookRequest->due_date = now()->addDays(14);
+            Bookcopy::where('id', $bookRequest->bookcopy_id)->update(['status' => 'Borrowed']);
         }
 
         // Check if the new status is 'completed'
         if ($validatedData['newStatus'] === 'completed') {
             // Set return_date to now
             $bookRequest->return_date = now();
+            Bookcopy::where('id', $bookRequest->bookcopy_id)->update(['status' => 'Available']);
+        }
+
+        if ($validatedData['newStatus'] === 'denied' || $validatedData['newStatus'] === 'canceled') {
+            // Set return_date to now
+            Bookcopy::where('id', $bookRequest->bookcopy_id)->update(['status' => 'Available']);
         }
 
         // Update the 'status' field with the new status provided
