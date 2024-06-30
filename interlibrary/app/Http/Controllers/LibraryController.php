@@ -17,10 +17,10 @@ class LibraryController extends Controller
     public function index()
     {
         // $curr_user = auth()->user();
-            $libraries = Library::all();
-            return Inertia::render('Libraries/Index', [
-                'libraries' => $libraries,
-            ]);
+        $libraries = Library::all();
+        return Inertia::render('Libraries/Index', [
+            'libraries' => $libraries,
+        ]);
         // return $libraries;
     }
 
@@ -35,16 +35,17 @@ class LibraryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    // public function store(Request $request): RedirectResponse
-    // {
-    //     $validated = $request->validate([
-    //         'message' => 'required|string|max:255',
-    //     ]);
-
-    //     $request->user()->chirps()->create($validated);
-
-    //     return redirect(route('chirps.index'));
-    // }
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:libraries,email',
+            'phone' => 'required|string|max:10|unique:libraries,phone',
+            'address' => 'required|string|max:255',
+        ]);
+        Library::create($validated);
+        return 'ok';
+    }
 
     /**
      * Display the specified resource.
@@ -67,11 +68,10 @@ class LibraryController extends Controller
      */
     public function update(Request $request, Library $library)
     {
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'phone' => 'required|string|max:20',
+            'email' => 'required|string|email|max:255|unique:libraries,email',
+            'phone' => 'required|string|max:10|unique:libraries,phone',
             'address' => 'required|string|max:255',
         ]);
         $library->update($validatedData);
@@ -82,12 +82,9 @@ class LibraryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(Chirp $chirp): RedirectResponse
-    // {
-    //     Gate::authorize('delete', $chirp);
-
-    //     $chirp->delete();
-
-    //     return redirect(route('chirps.index'));
-    // }
+    public function destroy(Library $library)
+    {
+        $library->delete();
+        return 'ok';
+    }
 }
