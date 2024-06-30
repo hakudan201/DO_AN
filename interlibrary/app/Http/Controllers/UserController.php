@@ -111,12 +111,15 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(Chirp $chirp): RedirectResponse
+    // public function destroy(User $user)
     // {
-    //     Gate::authorize('delete', $chirp);
+    //     // Gate::authorize('delete', $book);
 
-    //     $chirp->delete();
+    //     // $book = Book::findOrFail($book);
 
-    //     return redirect(route('chirps.index'));
+    //     $book->delete();
+    //     GenresBook::where('book_id', $book->id)->delete();
+    //     return 'ok';
+    //     // return redirect()->route('books.index');
     // }
 }

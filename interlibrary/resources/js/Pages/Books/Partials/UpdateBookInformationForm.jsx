@@ -30,7 +30,6 @@ export default function UpdateBookInformationForm({
     const [selectedId, setSelectedId] = useState([]);
 
     useEffect(() => {
-
         setSelectedName(data.genres_name);
         setSelectedId(data.genres_id);
 
@@ -47,8 +46,7 @@ export default function UpdateBookInformationForm({
 
     const handleChange = (value) => {
         console.log(value);
-        setSelectedId(value);
-
+        setSelectedName(value);
     };
 
     const submit = (e) => {
@@ -64,13 +62,13 @@ export default function UpdateBookInformationForm({
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">
-                    Book Information
+                    Thông tin sách
                 </h2>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">
                 <div>
-                    <InputLabel htmlFor="title" value="Title" />
+                    <InputLabel htmlFor="title" value="Tên sách" />
                     <TextInput
                         id="title"
                         className="mt-1 block w-full"
@@ -84,7 +82,7 @@ export default function UpdateBookInformationForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="author" value="Author" />
+                    <InputLabel htmlFor="author" value="Tác giả" />
                     <TextInput
                         id="author"
                         className="mt-1 block w-full"
@@ -98,7 +96,7 @@ export default function UpdateBookInformationForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="publisher" value="Publisher" />
+                    <InputLabel htmlFor="publisher" value="Nhà xuất bản" />
                     <TextInput
                         id="publisher"
                         className="mt-1 block w-full"
@@ -112,30 +110,28 @@ export default function UpdateBookInformationForm({
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="genres" value="Genres" />
+                    <InputLabel htmlFor="genres" value="Thể loại" />
                     <Select
                         id="genres_id"
                         mode="multiple"
                         allowClear
                         style={{ width: "100%" }}
-                        placeholder="Please select genres"
+                        placeholder="Chọn thể loại"
                         onChange={handleChange}
                         value={selectedName}
                         filterOption={(input, option) =>
-                            option.label.toLowerCase().includes(input.toLowerCase())
+                            option.label
+                                .toLowerCase()
+                                .includes(input.toLowerCase())
                         }
+                        options={listAllGenre}
                     >
-                        {listAllGenre.map((option) => (
-                            <Select.Option key={option.value} value={option.value}>
-                                {option.label}
-                            </Select.Option>
-                        ))}
                     </Select>
                     <InputError className="mt-2" message={errors.genres} />
                 </div>
 
                 <div>
-                    <InputLabel htmlFor="description" value="Description" />
+                    <InputLabel htmlFor="description" value="Mô tả" />
                     <TextArea
                         id="description"
                         className="mt-1 block w-full"
@@ -149,7 +145,7 @@ export default function UpdateBookInformationForm({
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <PrimaryButton disabled={processing}>Save</PrimaryButton>
+                    <PrimaryButton disabled={processing}>Lưu</PrimaryButton>
                     <Transition
                         show={recentlySuccessful}
                         enter="transition ease-in-out"
@@ -157,10 +153,9 @@ export default function UpdateBookInformationForm({
                         leave="transition ease-in-out"
                         leaveTo="opacity-0"
                     >
-                        <p className="text-sm text-gray-600">Saved.</p>
+                        <p className="text-sm text-gray-600">Đã lưu.</p>
                     </Transition>
-
-                    </div>
+                </div>
             </form>
         </section>
     );

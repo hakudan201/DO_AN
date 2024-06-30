@@ -102,27 +102,27 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        // $validatedData = $request->validate([
-        //     'title' => [
-        //         'required',
-        //         'string',
-        //         'max:255',
-        //         Rule::unique('books')->ignore($book->id), // Assuming $book is the current record being updated
-        //     ],
-        //     'author' => 'required|string|max:255',
-        //     'publisher' => 'required|string|max:255',
-        //     'description' => 'required|string|max:25555',
-        // ]);
-        // $book->update($validatedData);
+        // return $request;
+        $validatedData = $request->validate([
+            'title' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('books')->ignore($book->id), // Assuming $book is the current record being updated
+            ],
+            'author' => 'required|string|max:255',
+            'publisher' => 'required|string|max:255',
+            'description' => 'required|string|max:25555',
+        ]);
+        $book->update($validatedData);
         // GenresBook::where('book_id', $book->id)->delete();
-        // // foreach ($request->genres as $genreId) {
-        // //     GenresBook::create([
-        // //         'book_id' => $book->id,
-        // //         'genre_id' => $genreId,
-        // //     ]);
-        // // }
-        // return redirect()->route('books.show', ['book' => $book->id]);
-        return $request;
+        // foreach ($request->genres as $genreId) {
+        //     GenresBook::create([
+        //         'book_id' => $book->id,
+        //         'genre_id' => $genreId,
+        //     ]);
+        // }
+        return redirect()->route('books.show', ['book' => $book->id]);
     }
 
     public function getAllBook()

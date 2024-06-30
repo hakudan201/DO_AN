@@ -53,17 +53,14 @@ export default function Index({ auth, books }) {
                 form.setFields([
                     {
                         name: "title",
-                        errors: [
-                            "This book title already exists. Please choose a different title.",
-                        ],
+                        errors: ["Sách đã tồn tại."],
                     },
                 ]);
             } else {
                 // Proceed with form submission
                 const selectedValues = { ...values, genre: selected };
-                await axios
-                    .post("/books", selectedValues)
-                    // .then((response) => console.log(response));
+                await axios.post("/books", selectedValues);
+                // .then((response) => console.log(response));
                 window.location.reload();
                 setOpen(false);
             }
@@ -252,15 +249,17 @@ export default function Index({ auth, books }) {
                 return (
                     <Space size="middle">
                         <Link href={route("books.show", { id: book.key })}>
-                            Sửa
+                            <Button type="primary">Sửa</Button>
                         </Link>
                         <Popconfirm
-                            title="Are you sure you want to delete this book?"
+                            title="Bạn có chắc chắn muốn xoá sách này?"
                             onConfirm={() => handleDelete(book.key)}
                             okText="Yes"
                             cancelText="No"
                         >
-                            <a href="#">Xoá</a>
+                            <a href="#">
+                                <Button type="primary">Xoá</Button>
+                            </a>
                         </Popconfirm>
                     </Space>
                 );
@@ -313,7 +312,7 @@ export default function Index({ auth, books }) {
                 />
             </Form>
             <Drawer
-                title="Create a new account"
+                title="Thêm sách mới vào hệ thống"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -324,9 +323,9 @@ export default function Index({ auth, books }) {
                 }}
                 extra={
                     <Space>
-                        <Button onClick={onClose}>Cancel</Button>
+                        <Button onClick={onClose}>Huỷ</Button>
                         <Button onClick={onSubmit} type="primary">
-                            Submit
+                            Xác nhận
                         </Button>
                     </Space>
                 }
