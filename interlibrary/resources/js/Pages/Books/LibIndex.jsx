@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import React, { useRef, useState } from "react";
 import {
     Button,
@@ -133,6 +133,17 @@ export default function Index({ auth, books, lib_name }) {
                 <a href={route("bookcopies.show", { id: record.key })}>
                     {text}
                 </a>
+            ),
+        },
+        {
+            title: "Hành động",
+            key: "operation",
+            fixed: "right",
+            width: 100,
+            render: (record) => (
+                <Link href={route("bookcopies.show", { id: record.key })}>
+                    <Button type="primary">Xem</Button>
+                </Link>
             ),
         },
     ];

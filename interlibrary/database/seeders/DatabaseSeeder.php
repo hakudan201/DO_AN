@@ -19,18 +19,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $libraries = Library::factory(2)->create();
-        User::factory()->count(40)->create([
+        $libraries = Library::factory(3)->create();
+        User::factory()->count(60)->create([
             'library_id' => function () use ($libraries) {
                 return $libraries->random(); // Assign a random library to each user
             },
         ]);
-        $books = Book::factory()->count(30)->create();
+        $books = Book::factory()->count(60)->create();
         // Author::factory()->count(20)->create();
         Genre::factory()->count(50)->create();
         // AuthorsBook::factory()->count(20)->create();
-        GenresBook::factory()->count(50)->create();
-        Bookcopy::factory()->count(100)->create([
+        GenresBook::factory()->count(70)->create();
+        Bookcopy::factory()->count(200)->create([
             'library_id' => function () use ($libraries) {
                 return $libraries->random(); // Assign a random library to each user
             },
@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
                 return $books->random();
             }
         ]);
-        Request::factory()->count(70)->create();
+        Request::factory()->count(100)->create();
 
         // $publishers = Publisher::factory()->count(10)->create();
 

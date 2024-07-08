@@ -38,9 +38,16 @@ class RequestController extends Controller
             $bookRequests = BookRequest::where('user_id', auth()->user()->id)->whereHas(
                 'bookCopy'
             )->with(['bookcopy.book:id,title', 'lendLib:id,name',])->get();
+            $library_id = auth()->user()->library_id;
+
+            $lib_name = User::with('library')
+                ->where('library_id', $library_id)
+                ->where('id', auth()->user()->id)
+                ->first();
 
             return Inertia::render('Requests/indexForUser', [
                 'requests' => $bookRequests,
+                'lib_name' => $lib_name->library->name
             ]);
         }
         // return $requests;
@@ -82,29 +89,31 @@ class RequestController extends Controller
     {
         $curr_user = auth()->user();
         $currentDateTime = now();
-        $request->merge([
-            'user_id' => $curr_user->id,
-            'borrow_lib' => $curr_user->library_id,
-            'borrow_date' => $currentDateTime,
-            'lend_type' => ($curr_user->library_id == $request->input('lend_lib')) ? 'normal' : 'interlib',
-            'status' => 'pending'
-        ]);
+        if ($curr_user->due_membership > $currentDateTime) {
 
-        // return $request;
+            $request->merge([
+                'user_id' => $curr_user->id,
+                'borrow_lib' => $curr_user->library_id,
+                'borrow_date' => $currentDateTime,
+                'lend_type' => ($curr_user->library_id == $request->input('lend_lib')) ? 'normal' : 'interlib',
+                'status' => 'pending'
+            ]);
 
+            $validated = $request->validate([
+                'bookcopy_id' => 'required',
+                'user_id' => 'required',
+                'borrow_date' => 'required',
+                'status' => 'required',
+                'borrow_lib' => 'required',
+                'lend_lib' => 'required',
+                'lend_type' => 'required',
+            ]);
 
-        $validated = $request->validate([
-            'bookcopy_id' => 'required',
-            'user_id' => 'required',
-            'borrow_date' => 'required',
-            'status' => 'required',
-            'borrow_lib' => 'required',
-            'lend_lib' => 'required',
-            'lend_type' => 'required',
-        ]);
-
-        BookRequest::create($validated);
-        Bookcopy::where('id', $request->bookcopy_id)->update(['status' => 'Reserved']);
+            BookRequest::create($validated);
+            Bookcopy::where('id', $request->bookcopy_id)->update(['status' => 'Reserved']);
+        } else {
+            return 'het han';
+        }
     }
 
     /**

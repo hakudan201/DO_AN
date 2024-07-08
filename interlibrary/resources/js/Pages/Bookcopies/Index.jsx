@@ -184,7 +184,7 @@ export default function Index({ auth, bookcopies, book }) {
     });
     return (
         <AuthenticatedLayout user={auth.user}>
-            <Head title="Sach" />
+            <Head title="Sách" />
             <Form form={form} component={false}>
                 <Table
                     components={{
@@ -199,7 +199,7 @@ export default function Index({ auth, bookcopies, book }) {
                     pagination={{
                         onChange: cancel,
                     }}
-                    title={() => 'Sach: '+book}
+                    title={() => 'Sách: '+book}
                 />
             </Form>
         </AuthenticatedLayout>

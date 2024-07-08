@@ -2,7 +2,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { Table } from "antd";
 
-export default function IndexForUser({ auth, requests }) {
+export default function IndexForUser({ auth, requests, lib_name }) {
     // Map the requests to the data structure expected by the table
     const originData = requests.map((data) => ({
         id: data.id,
@@ -72,9 +72,11 @@ export default function IndexForUser({ auth, requests }) {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Users" />
+
             <Table
                 columns={columns}
                 dataSource={originData}
+                title={() => lib_name}
                 rowKey={(record) => record.id} // Add a unique key for each row
             />
         </AuthenticatedLayout>
