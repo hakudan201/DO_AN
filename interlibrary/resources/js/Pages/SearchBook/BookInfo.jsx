@@ -10,14 +10,42 @@ import {
     Divider,
     List,
     Button,
+    notification,
 } from "antd";
 import { Link, Head, router } from "@inertiajs/react";
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
+import moment from "moment";
 
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 
 export default function BookInfo({ auth, book, bookcopies, user }) {
-    console.log(book);
-    console.log(bookcopies);
+    // console.log(auth);
+    // console.log(bookcopies);
+    // console.log(auth.user.due_membership);
+
+    const openNotification = (type, placement) => {
+        if (type === "overdue") {
+            notification.error({
+                message: "Thông báo",
+                description: "Bạn đã hết hạn membership.",
+                placement,
+            });
+        } else {
+            notification.info({
+                message: "Thông báo",
+                description: "Yêu cầu đã được gửi.",
+                placement,
+            });
+        }
+    };
+
+    const isOverdue = () => {
+        if (auth.user) {
+            const dueDate = moment(auth.user.due_membership); // Assuming item.due_date is a date string
+            return moment().isAfter(dueDate);
+        } else {
+            return false;
+        }
+    };
 
     const { Header, Footer, Sider, Content } = Layout;
     const headerStyle = {
@@ -107,19 +135,19 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
                 <nav className="-mx-3 flex flex-1 justify-between items-center">
                     {auth.user ? (
                         <>
-                        <div>
-                        <button onClick={goBack}>Quay lại</button>
-                    </div>
-                        {/* <Link
+                            <div>
+                                <button onClick={goBack}>Quay lại</button>
+                            </div>
+                            {/* <Link
                             href={route("dashboard")}
                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                         >
                             Dashboard
                         </Link> */}
-                        <Link method="post" href={route('logout')}>
+                            <Link method="post" href={route("logout")}>
                                 Đăng xuất
                             </Link>
-                    </>
+                        </>
                     ) : (
                         <>
                             <div>
@@ -192,15 +220,30 @@ export default function BookInfo({ auth, book, bookcopies, user }) {
                                         id: item.key,
                                     })}
                                     method="post"
-                                    data={{ bookcopy_id: item.id,
+                                    data={{
+                                        bookcopy_id: item.id,
                                         lend_lib: item.library_id,
-                                     }}
+                                    }}
                                 >
                                     <Button
                                         type="primary"
                                         style={{
                                             marginLeft: "100px",
                                             marginRight: "10px",
+                                        }}
+                                        onClick={(e) => {
+                                            if (isOverdue()) {
+                                                e.preventDefault();
+                                                openNotification(
+                                                    "overdue",
+                                                    "topRight"
+                                                );
+                                            } else {
+                                                openNotification(
+                                                    "borrow",
+                                                    "topRight"
+                                                );
+                                            }
                                         }}
                                         disabled={item.status !== "Available"} // Enable button only when status is 'available'
                                     >

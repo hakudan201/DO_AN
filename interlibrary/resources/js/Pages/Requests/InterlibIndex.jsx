@@ -16,14 +16,42 @@ export default function InterlibIndex({ auth, requests, lib_name }) {
         dispatched: "Đang chuyển"
     };
 
+    let borrow_lib_list = [  ]
+    requests.forEach(element => {
+        if (!borrow_lib_list.includes(element.borrow_lib.name)) {
+            borrow_lib_list.push(element.borrow_lib.name);}
+    });
+    let map_borrow_lib_list = borrow_lib_list.map((lib_name) => {
+        return {
+            value:lib_name,
+            text:lib_name
+        }
+    })
+    let lend_lib_list = [  ]
+    requests.forEach(element => {
+        if (!lend_lib_list.includes(element.lend_lib.name)) {
+            lend_lib_list.push(element.lend_lib);}
+    });
+    let map_lend_lib_list = borrow_lib_list.map((lib_name) => {
+        return {
+            value:lib_name,
+            text:lib_name
+        }
+    })
     const columns = [
         {
             title: "Thư viện mượn",
             dataIndex: "borrow_lib",
+            filters: map_borrow_lib_list,
+            onFilter: (value, record) => record.borrow_lib.indexOf(value) === 0,
+
         },
         {
             title: "Thư viện cho mượn",
             dataIndex: "lend_lib",
+            filters: map_lend_lib_list,
+            onFilter: (value, record) => record.lend_lib.indexOf(value) === 0,
+
         },
         {
             title: "Ngày mượn",

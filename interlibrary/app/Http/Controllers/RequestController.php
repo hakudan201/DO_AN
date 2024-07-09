@@ -111,8 +111,9 @@ class RequestController extends Controller
 
             BookRequest::create($validated);
             Bookcopy::where('id', $request->bookcopy_id)->update(['status' => 'Reserved']);
+            // re？turn 1
         } else {
-            return 'het han';
+            //
         }
     }
 
