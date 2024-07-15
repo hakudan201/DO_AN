@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Badge, Descriptions, Row, Col, Button } from "antd";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, usePage, Link } from "@inertiajs/react";
@@ -13,6 +13,7 @@ export default function BorrowInformation({
     borrow_lib,
     lend_lib,
 }) {
+    const printRef = useRef();
     const items = [
         {
             key: "1",
@@ -202,6 +203,15 @@ export default function BorrowInformation({
             // Optionally, handle errors or display error messages to the user
         }
     };
+    const handlePrint = () => {
+        const printContents = printRef.current.innerHTML;
+        const originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        window.location.reload();
+    };
 
     let buttonSet = null;
 
@@ -243,6 +253,13 @@ export default function BorrowInformation({
                 >
                     Xác nhận lấy sách
                 </Button>
+                {/* <Button
+                    type="primary"
+                    onClick={handlePrint}
+                    style={{ marginRight: "10px" }}
+                >
+                    In
+                </Button> */}
                 <Button type="primary" onClick={handleCancelClick} danger>
                     Huỷ
                 </Button>
@@ -268,17 +285,19 @@ export default function BorrowInformation({
             <Row justify="center" style={{ padding: "20px" }}>
                 <Col xs={24} sm={20} md={100} lg={100} xl={100}>
                     {/* Control the width with Col */}
-                    <Descriptions
-                        title="Thông tin phiếu mượn liên thư viện"
-                        layout="vertical"
-                        bordered
-                        items={items}
-                        extra={
-                            <Link href={route("requests.interlibIndex")}>
-                                <Button type="primary">Quay lại</Button>
-                            </Link>
-                        }
-                    />
+                    <div ref={printRef}>
+                        <Descriptions
+                            title="Thông tin phiếu mượn liên thư viện"
+                            layout="vertical"
+                            bordered
+                            items={items}
+                            // extra={
+                            //     <Link href={route("requests.interlibIndex")}>
+                            //         <Button type="primary">Quay lại</Button>
+                            //     </Link>
+                            // }
+                        />
+                    </div>
                     {buttonSet}
                 </Col>
             </Row>

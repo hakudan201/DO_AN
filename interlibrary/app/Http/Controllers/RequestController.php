@@ -136,16 +136,17 @@ class RequestController extends Controller
 
     public function interlibShow(Request $request)
     {
-        $curr_user_id = auth()->user()->library_id;
+        $curr_user_lib_id = auth()->user()->library_id;
         $book = $request->book;
         $bookcopy = $request->bookcopy;
         $user = $request->user;
         $borrow_lib_name = $request->borrow_lib;
         $lend_lib_name = $request->lend_lib;
         $request = BookRequest::find($request->request_id);
-        $borrow_lib = $request->borrow_lib;
-
-        if ($borrow_lib == $curr_user_id) {
+        $borrow_lib_id = $request->borrow_lib;
+        $user_lib = Library::find($curr_user_lib_id)->name;
+        // return $borrow_lib_name;
+        if ($borrow_lib_name == $user_lib) {
             return Inertia::render('Requests/BorrowInformation', [
                 'book' => $book,
                 'bookcopy' => $bookcopy,
